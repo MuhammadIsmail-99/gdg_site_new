@@ -1,0 +1,79 @@
+.partners {
+    display: flex;
+    align-items: center;
+    padding: 60px 0;
+    background-color: var(--white);
+    border-top: 1px solid var(--gray-100);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 24px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.header h2 {
+    font-size: var(--heading-size);
+    font-weight: 700;
+    margin: 8px 0;
+    letter-spacing: -0.02em;
+}
+
+.header p {
+    color: var(--gray-600);
+    font-size: var(--description-size);
+    line-height: 1.6;
+    margin-top: 12px;
+}
+
+.logoGrid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 32px;
+    align-items: center;
+    justify-items: center;
+}
+
+.logoItem {
+    width: 100%;
+    max-width: 150px;
+    transition: transform 0.3s ease;
+}
+
+.githubLogo {
+    max-width: 110px;
+}
+
+.logoWrapper {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 2;
+}
+
+.logoImage {
+    object-fit: contain;
+    transition: all 0.4s ease;
+}
+
+.logoItem:hover {
+    transform: translateY(-4px);
+}
+
+@media (max-width: 1024px) {
+    .logoGrid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 32px;
+    }
+}
+
+@media (max-width: 600px) {
+    .partners {
+        padding: 40px 0;
+    }
+
+    .logoGrid {
+        gap: 24px;
+    }
+}

@@ -1,0 +1,123 @@
+.scrollTrack {
+    position: relative;
+    height: 300vh;
+    background-color: #FFFFFF;
+}
+
+.stickyContainer {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 48px;
+}
+
+.header h2 {
+    font-size: var(--heading-size);
+    margin-top: 8px;
+}
+
+.viewAll {
+    color: var(--gdg-blue);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    padding-bottom: 8px;
+}
+
+.carousel {
+    width: 100%;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.carousel::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.carousel {
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
+}
+
+.innerCarousel {
+    display: flex;
+    gap: 32px;
+    width: max-content;
+}
+
+.eventCard {
+    min-width: 350px;
+    background-color: var(--white);
+    padding: 40px;
+    border-radius: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    scroll-snap-align: start;
+    flex-shrink: 0;
+}
+
+.eventCard h3 {
+    font-size: 1.5rem;
+    margin: 24px 0 12px;
+}
+
+.eventCard p {
+    color: var(--gray-600);
+    line-height: 1.6;
+    margin-bottom: 32px;
+    flex-grow: 1;
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--gray-100);
+}
+
+.category {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.date {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    font-family: var(--font-mono);
+}
+
+.learnMore {
+    font-weight: 600;
+    color: var(--gdg-blue);
+    font-size: 0.9375rem;
+}
+
+@media (max-width: 768px) {
+    .eventCard {
+        min-width: 300px;
+        padding: 32px;
+    }
+
+    .header h2 {
+        font-size: 2rem;
+    }
+
+    .carousel {
+        padding-bottom: 16px;
+        margin-bottom: -16px;
+    }
+}

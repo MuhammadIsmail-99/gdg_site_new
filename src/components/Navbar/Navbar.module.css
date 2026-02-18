@@ -1,0 +1,57 @@
+.navbar {
+    height: 72px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--gray-100);
+    background-color: var(--white);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.navContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-family: var(--font-primary);
+    font-weight: 700;
+    font-size: 1.25rem;
+    display: flex;
+    gap: 4px;
+}
+
+.gdg {
+    color: var(--gdg-blue);
+}
+
+.chapter {
+    color: var(--gray-700);
+    font-weight: 400;
+}
+
+.navLinks {
+    display: flex;
+    list-style: none;
+    gap: 32px;
+    align-items: center;
+}
+
+.navLinks a {
+    font-size: 0.9375rem;
+    color: var(--gray-700);
+    font-weight: 500;
+}
+
+.navLinks a:hover {
+    color: var(--gdg-blue);
+}
+
+@media (max-width: 768px) {
+    .navLinks {
+        display: none;
+        /* Mobile menu will be handled later */
+    }
+}

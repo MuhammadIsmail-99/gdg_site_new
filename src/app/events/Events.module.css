@@ -1,0 +1,117 @@
+.header {
+    padding: 80px 0 40px;
+}
+
+.header h1 {
+    margin-top: 16px;
+}
+
+.header p {
+    color: var(--gray-700);
+    margin-top: 16px;
+}
+
+.filters {
+    display: flex;
+    gap: 16px;
+    margin-top: 32px;
+}
+
+.filters button {
+    padding: 8px 20px;
+    border-radius: 20px;
+    border: 1px solid var(--gray-100);
+    background: none;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.filters button.active {
+    background-color: var(--gdg-blue);
+    color: var(--white);
+    border-color: var(--gdg-blue);
+}
+
+.eventGrid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+    margin-bottom: 100px;
+}
+
+.eventCard {
+    border: 1px solid var(--gray-100);
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: var(--white);
+    display: flex;
+}
+
+.eventImage {
+    width: 200px;
+    position: relative;
+}
+
+.statusBadge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    padding: 4px 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--black);
+}
+
+.eventInfo {
+    padding: 24px;
+    flex-grow: 1;
+}
+
+.type {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--gray-700);
+    display: block;
+    margin-bottom: 8px;
+}
+
+.eventInfo h3 {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+}
+
+.date {
+    color: var(--gray-700);
+    font-size: 0.875rem;
+    margin-bottom: 24px;
+}
+
+.viewBtn {
+    padding: 10px 20px;
+    border: 1px solid var(--gray-100);
+    background: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+@media (max-width: 992px) {
+    .eventGrid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .eventCard {
+        flex-direction: column;
+    }
+
+    .eventImage {
+        width: 100%;
+        height: 150px;
+    }
+}

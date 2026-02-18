@@ -1,0 +1,91 @@
+.section {
+    padding: 80px 0 40px;
+}
+
+.lead {
+    font-size: 1.25rem;
+    color: var(--gray-700);
+    max-width: 800px;
+    margin-top: 24px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin: 60px 0;
+}
+
+.card {
+    padding: 40px;
+    border-radius: 12px;
+    background-color: var(--gray-100);
+}
+
+.card h2 {
+    margin-bottom: 20px;
+}
+
+.blue {
+    color: var(--gdg-blue);
+}
+
+.green {
+    color: var(--gdg-green);
+}
+
+.achievements {
+    margin: 100px 0;
+}
+
+.achievements h2 {
+    font-size: 2rem;
+    margin-bottom: 48px;
+}
+
+.milestones {
+    list-style: none;
+    position: relative;
+    padding-left: 40px;
+}
+
+.milestones::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: var(--gray-100);
+}
+
+.milestones li {
+    margin-bottom: 48px;
+    position: relative;
+}
+
+.dot {
+    position: absolute;
+    left: -44px;
+    top: 8px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: var(--gdg-blue);
+    border: 4px solid var(--white);
+}
+
+.milestones h3 {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+}
+
+.milestones p {
+    color: var(--gray-700);
+}
+
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}

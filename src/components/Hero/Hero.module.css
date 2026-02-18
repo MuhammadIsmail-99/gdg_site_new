@@ -1,0 +1,121 @@
+.hero {
+    padding: 0;
+    overflow: hidden;
+    position: relative;
+    background-color: var(--white);
+    min-height: calc(100vh - 72px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.hero::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.4;
+    background-image: radial-gradient(#e5e7eb 1px, transparent 1px);
+    background-size: 32px 32px;
+}
+
+.heroContent {
+    position: relative;
+    z-index: 10;
+}
+
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gray-100), transparent);
+}
+
+.heroContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+}
+
+.content {
+    max-width: 900px;
+    margin-top: -36px;
+    /* Balance the centering due to nav */
+}
+
+.content h1 {
+    font-size: 5rem;
+    line-height: 1.1;
+    margin: 16px 0 24px;
+    letter-spacing: -0.03em;
+}
+
+.highlight {
+    background: linear-gradient(120deg, var(--gdg-blue), var(--gdg-blue-light));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.content p {
+    font-size: var(--description-size);
+    color: var(--gray-700);
+    margin-bottom: 48px;
+    line-height: 1.6;
+}
+
+.cta {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+}
+
+.secondaryBtn {
+    font-weight: 600;
+    color: var(--gdg-blue);
+    padding: 12px 24px;
+    transition: transform 0.2s ease;
+}
+
+.secondaryBtn:hover {
+    transform: translateY(-2px);
+}
+
+@media (max-width: 1024px) {
+    .content h1 {
+        font-size: 4rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .content h1 {
+        font-size: 3.5rem;
+    }
+
+    .content p {
+        font-size: 1.125rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .content h1 {
+        font-size: 2.5rem;
+    }
+
+    .cta {
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .btn-primary {
+        width: 100%;
+    }
+}
