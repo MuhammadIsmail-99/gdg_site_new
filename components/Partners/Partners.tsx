@@ -5,8 +5,8 @@ import Image from 'next/image';
 import styles from './Partners.module.css';
 
 const partners = [
-    { name: 'Air University', logo: '/partners/Air University.png' },
-    { name: 'GDGoC CUI', logo: '/partners/GDGoC CUI Chapter Logo.png' },
+    { name: 'Air University', logo: '/partners/air-university.png' },
+    { name: 'GDGoC CUI', logo: '/partners/gdgoc-cui-chapter.png' },
     { name: 'DataCamp', logo: '/partners/datacamp.png' },
     { name: 'GitHub', logo: '/partners/github.png' },
 ];
