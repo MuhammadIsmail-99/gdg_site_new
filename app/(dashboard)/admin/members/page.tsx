@@ -170,23 +170,25 @@ export default async function AdminMembersPage({
                 <RoleBadge role={member.role} />
               </td>
               <td style={{ padding: '12px 12px' }}>
-                {member.clubMemberships[0]?.club ? (
-                  <span style={{
-                    background: (member.clubMemberships[0].club.colorToken ?? '#4285F4') + '15',
-                    color: member.clubMemberships[0].club.colorToken ?? '#185FA5',
-                    padding: '2px 8px',
-                    borderRadius: 100,
-                    fontSize: '0.75rem',
-                    fontWeight: 600,
-                    whiteSpace: 'nowrap'
-                  }}>
-                    {member.clubMemberships[0].club.name}
-                  </span>
-                ) : (
-                  <span style={{ color: '#9AA0A6', fontSize: '0.8rem' }}>
-                    Unassigned
-                  </span>
-                )}
+                {(() => {
+                  const membership = (member as any).clubMemberships;
+                  const item = Array.isArray(membership) ? membership[0] : membership;
+                  const club = item?.club;
+                  if (!club) return <span style={{ color: '#9AA0A6', fontSize: '0.8rem' }}>Unassigned</span>;
+                  return (
+                    <span style={{
+                      background: (club.colorToken ?? '#4285F4') + '15',
+                      color: club.colorToken ?? '#185FA5',
+                      padding: '2px 8px',
+                      borderRadius: 100,
+                      fontSize: '0.75rem',
+                      fontWeight: 600,
+                      whiteSpace: 'nowrap'
+                    }}>
+                      {club.name}
+                    </span>
+                  );
+                })()}
               </td>
               <td style={{ padding: '12px 12px', color: '#5F6368' }}>
                 {member.department ?? '—'}

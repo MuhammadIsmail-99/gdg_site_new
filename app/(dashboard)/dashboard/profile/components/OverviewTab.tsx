@@ -113,11 +113,24 @@ export default function OverviewTab({ member }: OverviewTabProps) {
                 {member.tier}
               </span>
             )}
-            {member.clubMemberships?.[0] && (
-              <span style={{ background: (member.clubMemberships[0].club.colorToken ?? '#34A853') + '15', color: member.clubMemberships[0].club.colorToken ?? '#137333', padding: '2px 10px', borderRadius: 100, fontSize: '0.75rem', fontWeight: 600 }}>
-                {member.clubMemberships[0].club.name}
-              </span>
-            )}
+            {(() => {
+              const membership = (member as any).clubMemberships;
+              const item = Array.isArray(membership) ? membership[0] : membership;
+              const club = item?.club;
+              if (!club) return null;
+              return (
+                <span style={{ 
+                  background: (club.colorToken ?? '#34A853') + '15', 
+                  color: club.colorToken ?? '#137333', 
+                  padding: '2px 10px', 
+                  borderRadius: 100, 
+                  fontSize: '0.75rem', 
+                  fontWeight: 600 
+                }}>
+                  {club.name}
+                </span>
+              );
+            })()}
             <span style={{ background: '#FEF7E0', color: '#B05E27', padding: '2px 10px', borderRadius: 100, fontSize: '0.75rem', fontWeight: 600 }}>
               {member.points} Points
             </span>

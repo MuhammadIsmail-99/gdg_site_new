@@ -29,5 +29,8 @@ export interface MemberDetail {
   isActive: boolean
   skills: { id: string; skill: string }[]
   contributions: { id: string; title: string; description: string }[]
-  clubMemberships: ClubMembership[]
+  clubMemberships?: {
+    club: Club
+    assignedAt: Date
+  } | null
 }

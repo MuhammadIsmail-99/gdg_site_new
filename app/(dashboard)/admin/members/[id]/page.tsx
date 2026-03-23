@@ -148,39 +148,45 @@ export default async function AdminMemberDetailPage({
           Club Assignment
         </h3>
 
-        {member.clubMemberships ? (
-          <div style={{ display: 'flex', justifyContent: 'space-between',
-            alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
-            <div>
-              <p style={{ fontWeight: 600, margin: 0 }}>
-                {member.clubMemberships.club.name}
+        {(() => {
+          const membership = (member as any).clubMemberships;
+          const item = Array.isArray(membership) ? membership[0] : membership;
+          const club = item?.club;
+          if (!club) return (
+            <div style={{ display: 'flex', justifyContent: 'space-between',
+              alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+              <p style={{ color: '#5F6368', margin: 0, fontSize: '0.9rem' }}>
+                No club assigned yet.
               </p>
-              <p style={{ fontSize: '0.8rem', color: '#5F6368', margin: '4px 0 0' }}>
-                {member.clubMemberships.club.type === 'technical' ? 'Technical Track' : 'Creative Track'} ·{' '}
-                Assigned {new Date(member.clubMemberships.assignedAt).toLocaleDateString('en-PK', {
-                  day: 'numeric', month: 'long', year: 'numeric',
-                })}
-              </p>
+              <ClubAssignmentControl
+                memberId={id}
+                currentClubId={null}
+                allClubs={allClubs}
+              />
             </div>
-            <ClubAssignmentControl
-              memberId={id}
-              currentClubId={member.clubMemberships.clubId}
-              allClubs={allClubs}
-            />
-          </div>
-        ) : (
-          <div style={{ display: 'flex', justifyContent: 'space-between',
-            alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
-            <p style={{ color: '#5F6368', margin: 0, fontSize: '0.9rem' }}>
-              No club assigned yet.
-            </p>
-            <ClubAssignmentControl
-              memberId={id}
-              currentClubId={null}
-              allClubs={allClubs}
-            />
-          </div>
-        )}
+          );
+          return (
+            <div style={{ display: 'flex', justifyContent: 'space-between',
+              alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+              <div>
+                <p style={{ fontWeight: 600, margin: 0 }}>
+                  {club.name}
+                </p>
+                <p style={{ fontSize: '0.8rem', color: '#5F6368', margin: '4px 0 0' }}>
+                  {club.type === 'technical' ? 'Technical Track' : 'Creative Track'} ·{' '}
+                  Assigned {new Date(item.assignedAt).toLocaleDateString('en-PK', {
+                    day: 'numeric', month: 'long', year: 'numeric',
+                  })}
+                </p>
+              </div>
+              <ClubAssignmentControl
+                memberId={id}
+                currentClubId={item.clubId}
+                allClubs={allClubs}
+              />
+            </div>
+          );
+        })()}
       </div>
 
       {/* Skills */}

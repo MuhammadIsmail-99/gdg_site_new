@@ -160,16 +160,22 @@ export default async function MemberProfilePage({
                     <div className="hero-content">
                         <span className="member-role">{member.tier || member.role}</span>
                         
-                        {member.clubMemberships?.[0] && (
-                            <div className="club-pill" style={{ 
-                                background: (member.clubMemberships[0].club.colorToken ?? '#4285F4') + '15',
-                                color: member.clubMemberships[0].club.colorToken ?? '#185FA5',
-                                border: `1px solid ${member.clubMemberships[0].club.colorToken ?? '#4285F4'}40`
-                            }}>
-                                <div style={{ width: 8, height: 8, borderRadius: '50%', background: member.clubMemberships[0].club.colorToken ?? '#4285F4' }} />
-                                {member.clubMemberships[0].club.name}
-                            </div>
-                        )}
+                        {(() => {
+                            const membership = (member as any).clubMemberships;
+                            const item = Array.isArray(membership) ? membership[0] : membership;
+                            const club = item?.club;
+                            if (!club) return null;
+                            return (
+                                <div className="club-pill" style={{ 
+                                    background: (club.colorToken ?? '#4285F4') + '15',
+                                    color: club.colorToken ?? '#185FA5',
+                                    border: `1px solid ${club.colorToken ?? '#4285F4'}40`
+                                }}>
+                                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: club.colorToken ?? '#4285F4' }} />
+                                    {club.name}
+                                </div>
+                            );
+                        })()}
 
                         <h1 className="member-name">{member.name}</h1>
                         <p className="member-tagline">{member.tagline}</p>
