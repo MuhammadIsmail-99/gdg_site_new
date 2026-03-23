@@ -4,9 +4,14 @@ import styles from './Partners.module.css';
 import { prisma } from '@/lib/prisma';
 
 async function getPartners() {
-    return prisma.partner.findMany({
-        orderBy: { order: 'asc' },
-    });
+    try {
+        return prisma.partner.findMany({
+            orderBy: { order: 'asc' },
+        });
+    } catch (error) {
+        console.warn('Could not fetch partners:', error)
+        return []
+    }
 }
 
 export default async function Partners() {
