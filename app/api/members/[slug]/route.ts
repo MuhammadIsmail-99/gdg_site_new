@@ -30,7 +30,6 @@ export async function GET(
         contributions: true,
         clubMemberships: {
           include: { club: { select: { id: true, name: true, type: true, colorToken: true } } },
-          take: 1,
         },
       },
     })

@@ -31,7 +31,6 @@ async function getMember(slug: string): Promise<MemberDetail> {
       contributions: true,
       clubMemberships: {
         include: { club: { select: { id: true, name: true, type: true, colorToken: true } } },
-        take: 1,
       },
     },
   }) as unknown as MemberDetail

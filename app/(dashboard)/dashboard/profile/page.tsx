@@ -11,7 +11,7 @@ export default async function ProfilePage() {
     include: {
       skills:          { orderBy: { skill: 'asc' } },
       contributions:   true,
-      clubMemberships: { include: { club: true }, take: 1 },
+      clubMemberships: { include: { club: true } },
       _count:          { select: { eventRegistrations: true } },
     },
   })
