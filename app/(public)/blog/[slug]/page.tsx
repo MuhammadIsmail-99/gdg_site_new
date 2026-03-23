@@ -19,11 +19,16 @@ async function getPost(slug: string): Promise<PostDetail> {
 // ─── Static Params ────────────────────────────────────────────────────────────
 
 export async function generateStaticParams() {
-  const posts = await prisma.post.findMany({
-    where:  { isPublished: true },
-    select: { slug: true },
-  })
-  return posts.map((p) => ({ slug: p.slug }))
+  try {
+    const posts = await prisma.post.findMany({
+      where:  { isPublished: true },
+      select: { slug: true },
+    })
+    return posts.map((p) => ({ slug: p.slug }))
+  } catch (error) {
+    console.warn('Could not fetch posts for static generation during build:', error)
+    return []
+  }
 }
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────

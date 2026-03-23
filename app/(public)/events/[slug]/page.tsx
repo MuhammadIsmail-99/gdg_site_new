@@ -27,11 +27,16 @@ async function getEvent(slug: string): Promise<EventDetail> {
 }
 
 export async function generateStaticParams() {
-  const events = await prisma.event.findMany({
-    where:  { isPublished: true },
-    select: { slug: true },
-  });
-  return events.map(e => ({ slug: e.slug }));
+  try {
+    const events = await prisma.event.findMany({
+      where:  { isPublished: true },
+      select: { slug: true },
+    });
+    return events.map(e => ({ slug: e.slug }));
+  } catch (error) {
+    console.warn('Could not fetch events for static generation during build:', error);
+    return [];
+  }
 }
 
 export default async function EventDetailPage({
