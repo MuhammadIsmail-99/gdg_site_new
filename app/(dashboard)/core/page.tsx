@@ -30,9 +30,9 @@ export default async function CoreOverviewPage() {
     { label: 'Upcoming Events',   value: upcomingEvents,     href: '/core/events',        color: '#34A853' },
     { label: 'Total Posts',       value: totalPosts,         href: '/core/blog',          color: '#FBBC04' },
     { label: 'Draft Posts',       value: draftPosts,         href: '/core/blog',          color: '#EA4335' },
-    { label: 'Applications',      value: totalApplications,  href: '/core/applications',  color: '#4285F4' },
-    { label: 'Pending Review',    value: pendingApplications, href: '/core/applications',  color: '#EA4335' },
-    { label: 'Active Members',    value: totalMembers,       href: '/core/members',       color: '#34A853' },
+    { label: 'Applications',      value: totalApplications,  href: '/admin/recruitment',  color: '#4285F4' },
+    { label: 'Pending Review',    value: pendingApplications, href: '/admin/recruitment?status=pending',  color: '#EA4335' },
+    { label: 'Active Members',    value: totalMembers,       href: '/admin/members',       color: '#34A853' },
     { label: 'Announcements',     value: activeAnnouncements, href: '/core/announcements', color: '#FBBC04' },
   ]
 
