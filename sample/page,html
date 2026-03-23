@@ -1,0 +1,31 @@
+<div class="jumbotron carousel-container carousel-with-blurred-background Homepage-carousel" style="visibility: visible;">
+        
+        <div class="">
+            <div id="carousel-id-1" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner" role="listbox">
+                    
+                        <div class="item active">
+                            
+                            <div class="background-image" style="background-image: url(https://res.cloudinary.com/startup-grind/image/upload/c_fill,dpr_2.0,f_auto,g_center,q_auto:good/v1/gcs/platform-data-goog/carousel_slides/GDG_Bevy_HomepageSlider_Text_rBkBERU.png);" role="img">
+                            </div>
+                            <div class="content" style="height: 400px;">
+                                
+                                <div class="content-inside">
+                                    
+                                        <h2>Connect with local developers</h2>
+                                    
+                                    
+                                        <h3>Join a Google Developer Group to build new skills and connect with local developers, online and in person.  Whether you're a beginner or a pro, all interested in technology are welcome in this inclusive community.</h3>
+                                    
+                                </div>
+                                
+                            </div>
+                            
+                        </div>
+                    
+
+                    
+                </div>
+            </div>
+        </div>
+    </div>

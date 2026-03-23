@@ -1,19 +1,19 @@
-"use client";
-
 import React from 'react';
 import Image from 'next/image';
 import styles from './Partners.module.css';
+import { prisma } from '@/lib/prisma';
 
-const partners = [
-    { name: 'Air University', logo: '/partners/air-university.png' },
-    { name: 'GDGoC CUI', logo: '/partners/gdgoc-cui-chapter.png' },
-    { name: 'DataCamp', logo: '/partners/datacamp.png' },
-    { name: 'GitHub', logo: '/partners/github.png' },
-];
+async function getPartners() {
+    return prisma.partner.findMany({
+        orderBy: { order: 'asc' },
+    });
+}
 
-const Partners = () => {
+export default async function Partners() {
+    const partners = await getPartners();
+
     return (
-        <section className={styles.partners} data-aos="fade-up">
+        <section className={styles.partners}>
             <div className="container">
                 <div className={styles.header}>
                     <span className="subheader">Collaborators</span>
@@ -21,23 +21,28 @@ const Partners = () => {
                 </div>
 
                 <div className={styles.logoGrid}>
-                    {partners.map((partner, index) => (
-                        <div key={index} className={`${styles.logoItem} ${partner.name === 'GitHub' ? styles.githubLogo : ''}`}>
+                    {partners.map((partner) => (
+                        <div key={partner.id} className={`${styles.logoItem} ${partner.name === 'GitHub' ? styles.githubLogo : ''}`}>
                             <div className={styles.logoWrapper}>
-                                <Image
-                                    src={partner.logo}
-                                    alt={partner.name}
-                                    fill
-                                    className={styles.logoImage}
-                                    sizes="(max-width: 768px) 150px, 200px"
-                                />
+                                {partner.logoUrl ? (
+                                    <Image
+                                        src={partner.logoUrl}
+                                        alt={partner.name}
+                                        fill
+                                        className={styles.logoImage}
+                                        sizes="(max-width: 768px) 150px, 200px"
+                                    />
+                                ) : (
+                                    <div className={styles.placeholder}>{partner.name}</div>
+                                )}
                             </div>
                         </div>
                     ))}
+                    {partners.length === 0 && (
+                        <p style={{ gridColumn: '1 / -1', textAlign: 'center', opacity: 0.5 }}>Community partners coming soon.</p>
+                    )}
                 </div>
             </div>
         </section>
     );
-};
-
-export default Partners;
+}

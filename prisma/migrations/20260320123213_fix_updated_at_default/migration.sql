@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "EventRegistration" ALTER COLUMN "updatedAt" SET DEFAULT CURRENT_TIMESTAMP;

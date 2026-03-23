@@ -1,0 +1,181 @@
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 80px 80px;
+    background-color: #fafafa;
+}
+
+@media (max-width: 768px) {
+    .container {
+        padding: 40px 40px;
+    }
+}
+
+/* Header */
+.header {
+    margin-bottom: 80px;
+}
+
+.title {
+    font-size: clamp(2.25rem, 5vw, 3rem);
+    font-weight: 700;
+    color: #202124;
+    margin-bottom: 24px;
+    letter-spacing: -0.02em;
+    font-family: 'Google Sans', sans-serif;
+}
+
+.description {
+    color: #5f6368;
+    max-width: 768px;
+    margin: 0 auto;
+    line-height: 1.6;
+    font-size: 1.125rem;
+}
+
+.brandName {
+    color: #4285F4;
+    font-weight: 600;
+}
+
+/* Grid */
+.teamGrid {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 80px 40px;
+    padding: 0 16px;
+}
+
+@media (min-width: 640px) {
+    .teamGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 1024px) {
+    .teamGrid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+/* Card Styles */
+.teamCardWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.teamCard {
+    width: 100%;
+    border-radius: 24px;
+    padding: 0 32px 32px 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.teamCard:hover {
+    transform: translateY(-12px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
+}
+
+.avatarContainer {
+    margin-top: -40px;
+    margin-bottom: 20px;
+    position: relative;
+    z-index: 20;
+}
+
+.avatarRing {
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 6px solid #fff;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    outline: 8px solid transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatarRing img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.memberName {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #202124;
+    margin-bottom: 12px;
+    font-family: 'Google Sans', sans-serif;
+}
+
+.roleBadge {
+    padding: 6px 16px;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Color Variants */
+.cardBlue { background: linear-gradient(180deg, #f8faff 0%, #e8f0fe 100%); border-color: #d2e3fc; }
+.ringBlue { outline-color: rgba(66, 133, 244, 0.08); background-color: #4285F4; }
+.badgeBlue { background: rgba(26, 115, 232, 0.1); color: #1a73e8; }
+
+.cardRed { background: linear-gradient(180deg, #fffafa 0%, #fce8e6 100%); border-color: #fad2cf; }
+.ringRed { outline-color: rgba(234, 67, 53, 0.08); background-color: #EA4335; }
+.badgeRed { background: rgba(217, 48, 37, 0.1); color: #d93025; }
+
+.cardYellow { background: linear-gradient(180deg, #fffdf7 0%, #fef7e0 100%); border-color: #feefc3; }
+.ringYellow { outline-color: rgba(251, 188, 4, 0.08); background-color: #FBBC04; }
+.badgeYellow { background: rgba(249, 171, 0, 0.1); color: #f9ab00; }
+
+.cardGreen { background: linear-gradient(180deg, #f8fff9 0%, #e6f4ea 100%); border-color: #ceead6; }
+.ringGreen { outline-color: rgba(52, 168, 83, 0.08); background-color: #34A853; }
+.badgeGreen { background: rgba(24, 128, 56, 0.1); color: #188038; }
+
+/* Indicators */
+.contributorsSection {
+    margin-top: 64px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    align-items: center;
+}
+
+.contributorsText {
+    color: #9aa0a6;
+    font-size: 0.875rem;
+    font-style: italic;
+    font-weight: 500;
+}
+
+.viewAllLink {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #1a73e8;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.viewAllLink:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    transform: translateX(4px);
+}
+
+.viewAllLink svg {
+    width: 16px;
+    height: 16px;
+}

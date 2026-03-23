@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { ArrowRight } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { motion } from 'framer-motion';
 import styles from './CTA.module.css';
 
@@ -66,7 +66,7 @@ const CTA = () => {
                             whileHover={{ y: -4 }}
                         >
                             Join Our Community
-                            <ArrowRight className="w-5 h-5" />
+                            <ExternalLink size={20} />
                         </motion.button>
 
                         <button className={styles.eventsBtn}>

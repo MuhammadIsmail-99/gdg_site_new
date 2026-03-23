@@ -13,11 +13,12 @@
 }
 
 .footerBrand .logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 16px;
-    display: flex;
-    gap: 4px;
+    margin-bottom: 24px;
+}
+
+.logoImage {
+    height: 32px;
+    width: auto;
 }
 
 .gdg {
@@ -38,7 +39,24 @@
 .university {
     font-size: 0.875rem;
     color: var(--gray-700);
+    margin-bottom: 24px;
 }
+
+.brandBoxes {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.box {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+}
+
+.boxRed { background-color: #EA4335; transform: rotate(45deg); }
+.boxBlue { background-color: #4285F4; transform: rotate(-12deg); }
+.boxYellow { background-color: #FBBC05; transform: rotate(12deg); }
 
 .footerLinks {
     display: grid;
@@ -76,8 +94,16 @@
 }
 
 .footerBottom p {
-    font-size: 0.75rem;
-    color: var(--gray-700);
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--black);
+    margin-bottom: 8px;
+}
+
+.trademark {
+    font-size: 0.75rem !important;
+    font-weight: 400 !important;
+    color: var(--gray-700) !important;
 }
 
 @media (max-width: 768px) {
