@@ -1,4 +1,5 @@
-import React from 'react';
+export const dynamic = 'force-dynamic';
+import React, { Suspense } from 'react';
 import { prisma } from '@/lib/prisma';
 
 async function getClubs() {

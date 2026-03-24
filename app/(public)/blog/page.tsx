@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react'
 import Link from 'next/link'
 import { auth } from '@/auth'
+import { prisma } from '@/lib/prisma'
 import type { PostSummary } from '@/types/post'
 import styles from './Blog.module.css'
 import { BlogTagFilter } from './BlogTagFilter'
@@ -12,25 +13,61 @@ async function getPosts(params?: {
   tag?: string
   page?: number
 }): Promise<{ posts: PostSummary[]; total: number; pages: number; page: number }> {
-  const url = new URL(
-    '/api/posts',
-    process.env.AUTH_URL ?? 'http://localhost:3000'
-  )
-  if (params?.search) url.searchParams.set('search', params.search)
-  if (params?.tag)    url.searchParams.set('tag',    params.tag)
-  if (params?.page)   url.searchParams.set('page',   String(params.page))
+  const search = params?.search ?? ''
+  const tag    = params?.tag    ?? ''
+  const page   = Math.max(1, params?.page ?? 1)
+  const limit  = 6
+  const skip   = (page - 1) * limit
 
-  const res = await fetch(url.toString(), { cache: 'no-store' })
-  if (!res.ok) return { posts: [], total: 0, pages: 1, page: 1 }
-  return res.json()
+  const where = {
+    isPublished: true,
+    ...(tag && { tags: { some: { tag: { equals: tag, mode: 'insensitive' as const } } } }),
+    ...(search && {
+      OR: [
+        { title:   { contains: search, mode: 'insensitive' as const } },
+        { content: { contains: search, mode: 'insensitive' as const } },
+      ],
+    }),
+  }
+
+  try {
+    const [posts, total] = await Promise.all([
+      prisma.post.findMany({
+        where,
+        include: {
+          author: { select: { name: true, imageUrl: true } },
+          tags:   true,
+        },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+      }),
+      prisma.post.count({ where }),
+    ])
+
+    return {
+      posts: posts as unknown as PostSummary[],
+      total,
+      page,
+      pages: Math.ceil(total / limit),
+    }
+  } catch (error) {
+    console.warn('⚠️ Could not fetch posts during build.');
+    return { posts: [], total: 0, pages: 1, page: 1 };
+  }
 }
 
 async function getTags(): Promise<string[]> {
-  const res = await fetch(
-    `${process.env.AUTH_URL ?? 'http://localhost:3000'}/api/posts/tags`,
-    { cache: 'no-store' }
-  )
-  return res.ok ? res.json() : []
+  try {
+    const tags = await prisma.postTag.findMany({
+      select: { tag: true },
+      distinct: ['tag'],
+      orderBy: { tag: 'asc' },
+    })
+    return tags.map(t => t.tag);
+  } catch (error) {
+    return [];
+  }
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────

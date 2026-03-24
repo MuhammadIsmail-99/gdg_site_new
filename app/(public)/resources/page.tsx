@@ -8,20 +8,25 @@ import type {
 } from '@/types/resources';
 
 async function getResourcesData() {
-  const [tracks, platforms, toolCategories] = await Promise.all([
-    prisma.resourceTrack.findMany({
-      include: { steps: { orderBy: { order: 'asc' } } },
-      orderBy: { name: 'asc' },
-    }),
-    prisma.resourcePlatform.findMany({
-      orderBy: { order: 'asc' },
-    }),
-    prisma.resourceToolCategory.findMany({
-      include: { tools: { orderBy: { order: 'asc' } } },
-      orderBy: { order: 'asc' },
-    }),
-  ]) as unknown as [ResourceTrack[], ResourcePlatform[], ResourceToolCategory[]];
-  return { tracks, platforms, toolCategories };
+  try {
+    const [tracks, platforms, toolCategories] = await Promise.all([
+      prisma.resourceTrack.findMany({
+        include: { steps: { orderBy: { order: 'asc' } } },
+        orderBy: { name: 'asc' },
+      }),
+      prisma.resourcePlatform.findMany({
+        orderBy: { order: 'asc' },
+      }),
+      prisma.resourceToolCategory.findMany({
+        include: { tools: { orderBy: { order: 'asc' } } },
+        orderBy: { order: 'asc' },
+      }),
+    ]) as unknown as [ResourceTrack[], ResourcePlatform[], ResourceToolCategory[]];
+    return { tracks, platforms, toolCategories };
+  } catch (error) {
+    console.warn('⚠️ Could not fetch resources during build.');
+    return { tracks: [], platforms: [], toolCategories: [] };
+  }
 }
 
 export default async function ResourcesPage() {

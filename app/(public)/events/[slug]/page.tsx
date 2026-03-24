@@ -17,13 +17,20 @@ import { EventDetail } from '@/types/event';
 import RSVPButton from '@/components/Events/RSVPButton';
 
 async function getEvent(slug: string): Promise<EventDetail> {
-  const baseUrl = process.env.AUTH_URL ?? 'http://localhost:3000';
-  const res = await fetch(
-    `${baseUrl}/api/events/${slug}`,
-    { cache: 'no-store' }
-  );
-  if (!res.ok) notFound();
-  return res.json();
+  const event = await prisma.event.findUnique({
+    where: { slug },
+    include: {
+      tags: true,
+      agendaItems: { orderBy: { order: 'asc' } },
+      _count: { select: { registrations: true } },
+    },
+  });
+
+  if (!event || !event.isPublished) {
+    notFound();
+  }
+
+  return event as unknown as EventDetail;
 }
 
 export async function generateStaticParams() {

@@ -10,40 +10,97 @@ async function getEvents(params?: {
   date?:   string
   page?:   number
 }) {
-  const baseUrl = process.env.AUTH_URL ?? 'http://localhost:3000';
-  const url = new URL('/api/events', baseUrl);
-  if (params?.search) url.searchParams.set('search', params.search);
-  if (params?.type)   url.searchParams.set('type',   params.type);
-  if (params?.topic)  url.searchParams.set('topic',  params.topic);
-  if (params?.date)   url.searchParams.set('date',   params.date);
-  if (params?.page)   url.searchParams.set('page',   String(params.page));
+  const search = params?.search ?? ''
+  const type   = params?.type   ?? ''
+  const topic  = params?.topic  ?? ''
+  const date   = params?.date   ?? ''
+  const page   = Math.max(1, params?.page ?? 1)
+  const limit  = 10
+  const skip   = (page - 1) * limit
+
+  const where: any = {
+    isPublished: true,
+    ...(search && {
+      OR: [
+        { title:       { contains: search, mode: 'insensitive' } },
+        { description: { contains: search, mode: 'insensitive' } },
+      ],
+    }),
+    ...(type  && { type:  { equals: type,  mode: 'insensitive' } }),
+    ...(topic && { tags:  { some: { tag: { equals: topic, mode: 'insensitive' } } } }),
+    ...(date  && {
+      date: {
+        gte: new Date(`${date}T00:00:00.000Z`),
+        lt:  new Date(`${date}T23:59:59.999Z`),
+      },
+    }),
+  }
 
   try {
-    const res = await fetch(url.toString(), { cache: 'no-store' });
-    if (!res.ok) return { events: [], total: 0, page: 1, pages: 1 };
-    return res.json() as Promise<{ events: EventSummary[], total: number, page: number, pages: number }>;
+    const [events, total] = await Promise.all([
+      prisma.event.findMany({
+        where,
+        include: {
+          tags:          true,
+          _count: { select: { registrations: true } },
+        },
+        orderBy: { date: 'asc' },
+        skip,
+        take: limit,
+      }),
+      prisma.event.count({ where }),
+    ])
+
+    return {
+      events: events as unknown as EventSummary[],
+      total,
+      page,
+      pages: Math.ceil(total / limit),
+    }
   } catch (error) {
-    console.warn(`⚠️ Failed to fetch /api/events on ${url.host} during build.`);
+    console.warn('⚠️ Map lookup or database error in getEvents during build.');
     return { events: [], total: 0, page: 1, pages: 1 };
   }
 }
 
 async function getMeta() {
-  const baseUrl = process.env.AUTH_URL ?? 'http://localhost:3000';
-  const res = await fetch(`${baseUrl}/api/events/meta`, { cache: 'no-store' });
-  if (!res.ok) return { types: [], topics: [] };
-  return res.json() as Promise<{ types: string[], topics: string[] }>;
+  try {
+    const [types, tags] = await Promise.all([
+      prisma.event.findMany({
+        where: { isPublished: true },
+        select: { type: true },
+        distinct: ['type'],
+      }),
+      prisma.eventTag.findMany({
+        select: { tag: true },
+        distinct: ['tag'],
+      }),
+    ])
+
+    return {
+      types: types.map(t => t.type).filter(Boolean),
+      topics: tags.map(t => t.tag).filter(Boolean),
+    }
+  } catch (error) {
+    return { types: [], topics: [] };
+  }
 }
 
-/** Fetch ALL published events (unpaginated) so the calendar can mark every date. */
 async function getAllEvents() {
-  const baseUrl = process.env.AUTH_URL ?? 'http://localhost:3000';
-  const url = new URL('/api/events', baseUrl);
-  url.searchParams.set('limit', '200'); // generous upper bound
-  const res = await fetch(url.toString(), { cache: 'no-store' });
-  if (!res.ok) return [] as EventSummary[];
-  const data = await res.json();
-  return data.events as EventSummary[];
+  try {
+    const events = await prisma.event.findMany({
+      where: { isPublished: true },
+      include: {
+        tags: true,
+        _count: { select: { registrations: true } },
+      },
+      orderBy: { date: 'asc' },
+      take: 200,
+    })
+    return events as unknown as EventSummary[];
+  } catch (error) {
+    return [];
+  }
 }
 
 export default async function EventsPage({

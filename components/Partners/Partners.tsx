@@ -5,11 +5,11 @@ import { prisma } from '@/lib/prisma';
 
 async function getPartners() {
     try {
-        return prisma.partner.findMany({
+        return await prisma.partner.findMany({
             orderBy: { order: 'asc' },
         });
     } catch (error) {
-        console.warn('Could not fetch partners:', error)
+        console.warn('⚠️ Could not fetch partners during build.');
         return []
     }
 }
