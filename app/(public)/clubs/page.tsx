@@ -37,18 +37,28 @@ const iconMap: Record<string, React.ElementType> = {
 };
 
 export default async function ClubsPage() {
-    const clubs = await getClubs();
-    const totalMemberCount = await getMemberCount();
-
-    const session = await auth();
+    let clubs: any[] = [];
+    let totalMemberCount = 0;
     let myClubId: string | null = null;
+    let session = null;
 
-    if (session?.user?.id) {
-        const membership = await prisma.clubMembership.findFirst({
-            where: { memberId: session.user.id },
-            select: { clubId: true },
-        });
-        myClubId = membership?.clubId ?? null;
+    try {
+        [clubs, totalMemberCount, session] = await Promise.all([
+            getClubs(),
+            getMemberCount(),
+            auth()
+        ]);
+        
+        if (session?.user?.id) {
+            const membership = await prisma.clubMembership.findFirst({
+                where: { memberId: session.user.id },
+                select: { clubId: true },
+            });
+            myClubId = membership?.clubId ?? null;
+        }
+    } catch (error) {
+        console.warn('⚠️ Could not fetch data for /clubs during build (database unreachable). Prerendering empty page.');
+        // Prerendering with empty data
     }
 
     const technical = clubs.filter(c => c.type === 'technical');

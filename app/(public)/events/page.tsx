@@ -18,9 +18,14 @@ async function getEvents(params?: {
   if (params?.date)   url.searchParams.set('date',   params.date);
   if (params?.page)   url.searchParams.set('page',   String(params.page));
 
-  const res = await fetch(url.toString(), { cache: 'no-store' });
-  if (!res.ok) throw new Error('Failed to fetch events');
-  return res.json() as Promise<{ events: EventSummary[], total: number, page: number, pages: number }>;
+  try {
+    const res = await fetch(url.toString(), { cache: 'no-store' });
+    if (!res.ok) return { events: [], total: 0, page: 1, pages: 1 };
+    return res.json() as Promise<{ events: EventSummary[], total: number, page: number, pages: number }>;
+  } catch (error) {
+    console.warn(`⚠️ Failed to fetch /api/events on ${url.host} during build.`);
+    return { events: [], total: 0, page: 1, pages: 1 };
+  }
 }
 
 async function getMeta() {
@@ -48,20 +53,33 @@ export default async function EventsPage({
 }) {
   const sp = await searchParams;
 
-  const [data, meta, allEvents, upcomingCount] = await Promise.all([
-    getEvents({
-      search: sp.search,
-      type:   sp.type,
-      topic:  sp.topic,
-      date:   sp.date,
-      page:   sp.page ? Number(sp.page) : 1,
-    }),
-    getMeta(),
-    getAllEvents(),
-    prisma.event.count({
-      where: { isPublished: true, date: { gte: new Date() } },
-    }),
-  ]);
+  let data: { events: EventSummary[], total: number, page: number, pages: number } = { events: [], total: 0, page: 1, pages: 1 };
+  let meta: { types: string[], topics: string[] } = { types: [], topics: [] };
+  let allEvents: EventSummary[] = [];
+  let upcomingCount = 0;
+
+  try {
+    const results = await Promise.all([
+      getEvents({
+        search: sp.search,
+        type:   sp.type,
+        topic:  sp.topic,
+        date:   sp.date,
+        page:   sp.page ? Number(sp.page) : 1,
+      }),
+      getMeta(),
+      getAllEvents(),
+      prisma.event.count({
+        where: { isPublished: true, date: { gte: new Date() } },
+      }),
+    ]);
+    data = results[0];
+    meta = results[1];
+    allEvents = results[2];
+    upcomingCount = results[3];
+  } catch (error) {
+    console.warn('⚠️ Could not fetch all event data during build.');
+  }
 
   return (
     <div className="events-root">

@@ -45,13 +45,18 @@ const LeadershipCard = ({ name, role, imageUrl, slug, size = "100px" }: any) => 
 );
 
 export default async function TeamPage() {
-  const members = await prisma.member.findMany({
-    where: { isActive: true },
-    select: { id: true, role: true, department: true }
-  });
+  let members: any[] = [];
+  try {
+    members = await prisma.member.findMany({
+      where: { isActive: true },
+      select: { id: true, role: true, department: true }
+    });
+  } catch (error) {
+    console.warn('⚠️ Could not fetch members for /team during build.');
+  }
 
   const coreLeads = members.filter(m => ['core', 'admin'].includes(m.role));
-  const departments = [...new Set(members.map(m => m.department).filter(Boolean))];
+  const departments = [...new Set(members.map(m => (m as any).department).filter(Boolean))];
 
   return (
     <div className="app-container">
