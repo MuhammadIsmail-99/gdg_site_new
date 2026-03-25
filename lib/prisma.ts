@@ -11,16 +11,28 @@ if (!connectionString) {
   }
 }
 
-const pool = new Pool({ connectionString })
+const pool = new Pool({
+  connectionString,
+  ssl: {
+    rejectUnauthorized: false,
+  },
+})
 
 // Add error handler to pool to prevent process crash
 pool.on('error', (err) => {
   console.error('Unexpected error on idle client', err)
 })
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// Use a versioned key to force re-initialization if needed
+const globalPrisma = globalThis as unknown as { prisma: PrismaClient | undefined }
+
+console.log('🔄 Initializing Prisma Client...');
+
 const adapter = new PrismaPg(pool as any)
 
-export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter, log: ['query'] })
+export const prisma = globalPrisma.prisma ?? new PrismaClient({ 
+  adapter, 
+  log: ['query', 'error', 'warn'] 
+})
 
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
+if (process.env.NODE_ENV !== 'production') globalPrisma.prisma = prisma
