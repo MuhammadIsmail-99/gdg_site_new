@@ -260,8 +260,8 @@ export default async function EventsPage({
         /* Event Card Styles */
         .event-card { display: flex; gap: 40px; margin-bottom: 60px; transition: all 0.3s; }
         .event-badge-wrapper { flex-shrink: 0; }
-        .badge-outer { width: 140px; height: 140px; background: #f8f9fa; border: 1px solid #f1f3f4; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 0 10px rgba(0,0,0,0.02); }
-        .badge-image { width: 90px; height: 90px; object-fit: contain; }
+        .badge-outer { width: 140px; height: 140px; background: #fff; border: 1px solid #f1f3f4; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.08); overflow: hidden; }
+        .badge-image { width: 100%; height: 100%; object-fit: cover; }
 
         .event-content { flex: 1; }
         .event-meta { font-size: 12px; font-weight: 700; color: #5f6368; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; letter-spacing: 0.5px; }
@@ -315,7 +315,7 @@ export default async function EventsPage({
         }
       `}</style>
 
-      <header className="hero" data-aos="fade-up">
+      <header className="hero animate-fade-in">
         <div className="hero-content">
           <nav className="hero-breadcrumb">
             <span>GDGOC</span> <span className="dot-sep" /> <span style={{ color: "#EA4335" }}>Events</span>

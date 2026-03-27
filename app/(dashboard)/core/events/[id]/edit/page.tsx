@@ -1,7 +1,7 @@
 import { requireRole } from '@/lib/auth-guard'
-import { prisma }      from '@/lib/prisma'
-import { notFound }    from 'next/navigation'
-import EventForm       from '../../new/EventForm'
+import { prisma } from '@/lib/prisma'
+import { notFound } from 'next/navigation'
+import EventForm from '../../new/EventForm'
 
 export default async function EditEventPage({
   params,
@@ -12,7 +12,7 @@ export default async function EditEventPage({
   await requireRole(['core', 'admin'])
 
   const event = await prisma.event.findUnique({
-    where:   { id },
+    where: { id },
     include: { tags: true, agendaItems: { orderBy: { order: 'asc' } } },
   })
 
@@ -20,8 +20,10 @@ export default async function EditEventPage({
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between',
-        alignItems: 'center', marginBottom: 24 }}>
+      <div style={{
+        display: 'flex', justifyContent: 'space-between',
+        alignItems: 'center', marginBottom: 24
+      }}>
         <h1 style={{ fontSize: '1.5rem', fontWeight: 700 }}>Edit Event</h1>
       </div>
       <EventForm event={event} mode="edit" />

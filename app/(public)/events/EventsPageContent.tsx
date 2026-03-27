@@ -12,7 +12,7 @@ import { Pagination } from '@/components/Events/Pagination';
 
 // ─── Event List Item ────────────────────────────────────────────────────────
 
-const EventListItem = ({ title, slug, date, location, tags, description, badgeUrl, _count }: EventSummary) => {
+const EventListItem = ({ title, slug, date, location, tags, description, badgeUrl, imageUrl, _count }: EventSummary) => {
   const dateObj = new Date(date);
   const formattedDate = dateObj.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
   const year = dateObj.getFullYear();
@@ -22,8 +22,8 @@ const EventListItem = ({ title, slug, date, location, tags, description, badgeUr
       <div className="event-badge-wrapper">
         <div className="badge-outer">
           <img
-            src={badgeUrl || "https://fonts.gstatic.com/s/i/productlogos/googleg_standard/v9/64.png"}
-            alt="Event Badge"
+            src={imageUrl || badgeUrl || "https://fonts.gstatic.com/s/i/productlogos/googleg_standard/v9/64.png"}
+            alt={title}
             className="badge-image"
             onError={(e: React.SyntheticEvent<HTMLImageElement>) => {
               (e.target as HTMLImageElement).src = 'https://www.gstatic.com/images/branding/product/1x/googleg_48dp.png';
@@ -38,6 +38,19 @@ const EventListItem = ({ title, slug, date, location, tags, description, badgeUr
           <span className="meta-type">WORKSHOP / STUDY GROUP</span>
           <span className="meta-sep">—</span>
           <span className="meta-loc">{location.toUpperCase()}</span>
+          {dateObj < new Date() && (
+            <span style={{ 
+              marginLeft: 'auto', 
+              background: '#f8f9fa', 
+              color: '#5f6368', 
+              padding: '2px 10px', 
+              borderRadius: 100, 
+              fontSize: '11px', 
+              border: '1px solid #dadce0',
+              fontWeight: 600,
+              textTransform: 'uppercase'
+            }}>Past Event</span>
+          )}
         </div>
         <h2 className="event-title">{title}</h2>
         <div className="tag-list">
@@ -73,13 +86,13 @@ const EventListItem = ({ title, slug, date, location, tags, description, badgeUr
 // ─── Calendar View (URL-driven) ─────────────────────────────────────────────
 
 const CalendarView = ({ allEvents }: { allEvents: EventSummary[] }) => {
-  const router       = useRouter();
-  const pathname     = usePathname();
+  const router = useRouter();
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const today = new Date();
   const [viewMonth, setViewMonth] = useState(today.getMonth());
-  const [viewYear,  setViewYear]  = useState(today.getFullYear());
+  const [viewYear, setViewYear] = useState(today.getFullYear());
 
   const selectedDate = searchParams.get('date') ?? '';
 
@@ -92,8 +105,8 @@ const CalendarView = ({ allEvents }: { allEvents: EventSummary[] }) => {
   );
 
   const daysInMonth = new Date(viewYear, viewMonth + 1, 0).getDate();
-  const firstDay    = new Date(viewYear, viewMonth, 1).getDay();
-  const todayStr    = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  const firstDay = new Date(viewYear, viewMonth, 1).getDay();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
   const cells = [
     ...Array(firstDay).fill(null),
@@ -112,7 +125,7 @@ const CalendarView = ({ allEvents }: { allEvents: EventSummary[] }) => {
 
   function selectDate(day: number) {
     const dateStr = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-    const params  = new URLSearchParams(searchParams.toString());
+    const params = new URLSearchParams(searchParams.toString());
     if (selectedDate === dateStr) {
       // toggle off if clicking same date
       params.delete('date');
@@ -153,9 +166,9 @@ const CalendarView = ({ allEvents }: { allEvents: EventSummary[] }) => {
         {cells.map((day, i) => {
           if (!day) return <div key={`empty-${i}`} className="cal-day empty" />;
 
-          const dateStr  = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+          const dateStr = `${viewYear}-${String(viewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
           const hasEvent = eventDates.has(dateStr);
-          const isToday  = dateStr === todayStr;
+          const isToday = dateStr === todayStr;
           const isSelected = selectedDate === dateStr;
 
           return (
@@ -167,7 +180,7 @@ const CalendarView = ({ allEvents }: { allEvents: EventSummary[] }) => {
               title={hasEvent ? 'Click to filter events for this date' : undefined}
             >
               <span className="day-num" style={{
-                color:      isSelected ? '#1a73e8' : isToday ? '#EA4335' : '#70757a',
+                color: isSelected ? '#1a73e8' : isToday ? '#EA4335' : '#70757a',
                 fontWeight: isToday || isSelected ? 700 : 500,
               }}>
                 {day}
@@ -198,11 +211,11 @@ const EventsPageContent = ({
   meta,
   allEvents,
 }: {
-  events:    EventSummary[]
-  total:     number
-  page:      number
-  pages:     number
-  meta:      { types: string[]; topics: string[] }
+  events: EventSummary[]
+  total: number
+  page: number
+  pages: number
+  meta: { types: string[]; topics: string[] }
   allEvents: EventSummary[]
 }) => {
   const searchParams = useSearchParams();
@@ -214,7 +227,7 @@ const EventsPageContent = ({
   return (
     <div className="events-root">
       {/* View switcher */}
-      <nav className="view-switcher" data-aos={isMounted ? 'fade-up' : ''}>
+      <nav className="view-switcher animate-fade-in">
         <div
           className={`view-tab ${viewMode === 'list' ? 'active' : ''}`}
           onClick={() => setViewMode('list')}
@@ -230,7 +243,7 @@ const EventsPageContent = ({
       </nav>
 
       {/* Filter bar */}
-      <div className="filter-bar" data-aos={isMounted ? 'fade-up' : ''}>
+      <div className="filter-bar animate-fade-in">
         <Suspense fallback={null}>
           <EventSearch />
         </Suspense>
@@ -250,7 +263,7 @@ const EventsPageContent = ({
           <CalendarView allEvents={allEvents} />
           {/* Show filtered events below the calendar when a date is selected */}
           {searchParams.get('date') && (
-            <div className="event-list" style={{ marginTop: 40 }} data-aos={isMounted ? 'fade-up' : ''}>
+            <div className="event-list animate-fade-in" style={{ marginTop: 40 }}>
               <p style={{ fontSize: '0.9rem', color: '#5F6368', marginBottom: 24 }}>
                 Showing {events.length} of {total} events
               </p>
@@ -268,28 +281,55 @@ const EventsPageContent = ({
 
       {/* List view */}
       {viewMode === 'list' && (
-        <div data-aos={isMounted ? 'fade-up' : ''}>
+        <div className="animate-fade-in">
           {/* Result count */}
           <p style={{ fontSize: '0.9rem', color: '#5F6368', marginBottom: 24 }}>
             Showing {events.length} of {total} event{total !== 1 ? 's' : ''}
           </p>
 
           <div className="event-list">
-            {events.map(ev => (
-              <EventListItem key={ev.slug} {...ev} />
-            ))}
-            {events.length === 0 && (
-              <div style={{ textAlign: 'center', padding: '100px 0', color: '#5f6368' }}>
-                <p>No events found matching your filters.</p>
-                <Link
-                  href="/events"
-                  className="details-btn"
-                  style={{ display: 'inline-block', marginTop: '1rem', textDecoration: 'none' }}
-                >
-                  Clear all filters
-                </Link>
-              </div>
-            )}
+            {(() => {
+              const now = new Date();
+              const upcoming = events.filter(e => new Date(e.date) >= now);
+              const past = events.filter(e => new Date(e.date) < now);
+
+              return (
+                <>
+                  {upcoming.length > 0 && (
+                    <div className="section-group animate-fade-in" style={{ marginBottom: 48 }}>
+                      <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#202124', marginBottom: 32, borderLeft: '4px solid #34A853', paddingLeft: 16 }}>Upcoming Events</h2>
+                      {upcoming.map(ev => (
+                        <EventListItem key={ev.slug} {...ev} />
+                      ))}
+                    </div>
+                  )}
+
+                  {past.length > 0 && (
+                    <div className="section-group animate-fade-in">
+                      <h2 style={{ fontSize: '1.5rem', fontWeight: 600, color: '#5f6368', marginBottom: 32, borderLeft: '4px solid #dadce0', paddingLeft: 16 }}>Past Events</h2>
+                      <div style={{ opacity: 0.85 }}>
+                        {past.map(ev => (
+                          <EventListItem key={ev.slug} {...ev} />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {events.length === 0 && (
+                    <div style={{ textAlign: 'center', padding: '100px 0', color: '#5f6368' }}>
+                      <p>No events found matching your filters.</p>
+                      <Link
+                        href="/events"
+                        className="details-btn"
+                        style={{ display: 'inline-block', marginTop: '1rem', textDecoration: 'none' }}
+                      >
+                        Clear all filters
+                      </Link>
+                    </div>
+                  )}
+                </>
+              );
+            })()}
           </div>
 
           {/* Pagination */}

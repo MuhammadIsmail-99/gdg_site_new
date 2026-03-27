@@ -1,24 +1,26 @@
 'use server'
 
-import { auth }           from '@/auth'
-import { prisma }         from '@/lib/prisma'
+import { auth } from '@/auth'
+import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
-import { redirect }       from 'next/navigation'
-import { z }              from 'zod'
+import { redirect } from 'next/navigation'
+import { z } from 'zod'
 
 function isCoreOrAdmin(role: string) {
   return role === 'core' || role === 'admin'
 }
 
 const eventSchema = z.object({
-  title:       z.string().min(3).max(200),
+  title: z.string().min(3).max(200),
   description: z.string().min(10),
-  type:        z.string().min(2),
-  location:    z.string().min(2),
-  date:        z.string().refine(d => !isNaN(Date.parse(d)), 'Invalid date'),
-  badgeUrl:    z.string().url().optional().or(z.literal('')),
-  imageUrl:    z.string().url().optional().or(z.literal('')),
+  type: z.string().min(2),
+  location: z.string().min(2),
+  date: z.string().refine(d => !isNaN(Date.parse(d)), 'Invalid date'),
+  badgeUrl: z.string().url().optional().or(z.literal('')),
+  imageUrl: z.string().url().optional().or(z.literal('')),
   isPublished: z.boolean().optional().default(false),
+  instagramUrl: z.string().url().optional().or(z.literal('')),
+  linkedinUrl: z.string().url().optional().or(z.literal('')),
 })
 
 export async function createEvent(
@@ -35,7 +37,7 @@ export async function createEvent(
     .map(t => t.trim())
     .filter(Boolean)
 
-  const agendaRaw  = formData.get('agenda') as string ?? '[]'
+  const agendaRaw = formData.get('agenda') as string ?? '[]'
   let agendaItems = []
   try {
     agendaItems = JSON.parse(agendaRaw)
@@ -44,14 +46,16 @@ export async function createEvent(
   }
 
   const parsed = eventSchema.safeParse({
-    title:       formData.get('title'),
+    title: formData.get('title'),
     description: formData.get('description'),
-    type:        formData.get('type'),
-    location:    formData.get('location'),
-    date:        formData.get('date'),
-    badgeUrl:    formData.get('badgeUrl'),
-    imageUrl:    formData.get('imageUrl'),
+    type: formData.get('type'),
+    location: formData.get('location'),
+    date: formData.get('date'),
+    badgeUrl: formData.get('badgeUrl'),
+    imageUrl: formData.get('imageUrl'),
     isPublished: formData.get('isPublished') === 'true',
+    instagramUrl: formData.get('instagramUrl'),
+    linkedinUrl: formData.get('linkedinUrl'),
   })
 
   if (!parsed.success) {
@@ -68,17 +72,17 @@ export async function createEvent(
     data: {
       ...parsed.data,
       slug,
-      date:  new Date(parsed.data.date),
+      date: new Date(parsed.data.date),
       tags: {
         create: tagsInput.map(tag => ({ tag }))
       },
       agendaItems: {
         create: agendaItems.map((item: any, i: number) => ({
-          time:        item.time,
-          title:       item.title,
+          time: item.time,
+          title: item.title,
           description: item.description || '',
-          speaker:     item.speaker     || '',
-          order:       i,
+          speaker: item.speaker || '',
+          order: i,
         }))
       },
     },
@@ -102,7 +106,7 @@ export async function updateEvent(
   const tagsInput = (formData.get('tags') as string ?? '')
     .split(',').map(t => t.trim()).filter(Boolean)
 
-  const agendaRaw   = formData.get('agenda') as string ?? '[]'
+  const agendaRaw = formData.get('agenda') as string ?? '[]'
   let agendaItems = []
   try {
     agendaItems = JSON.parse(agendaRaw)
@@ -111,14 +115,16 @@ export async function updateEvent(
   }
 
   const parsed = eventSchema.safeParse({
-    title:       formData.get('title'),
+    title: formData.get('title'),
     description: formData.get('description'),
-    type:        formData.get('type'),
-    location:    formData.get('location'),
-    date:        formData.get('date'),
-    badgeUrl:    formData.get('badgeUrl'),
-    imageUrl:    formData.get('imageUrl'),
+    type: formData.get('type'),
+    location: formData.get('location'),
+    date: formData.get('date'),
+    badgeUrl: formData.get('badgeUrl'),
+    imageUrl: formData.get('imageUrl'),
     isPublished: formData.get('isPublished') === 'true',
+    instagramUrl: formData.get('instagramUrl'),
+    linkedinUrl: formData.get('linkedinUrl'),
   })
 
   if (!parsed.success) {
@@ -138,11 +144,11 @@ export async function updateEvent(
         },
         agendaItems: {
           create: agendaItems.map((item: any, i: number) => ({
-            time:        item.time,
-            title:       item.title,
+            time: item.time,
+            title: item.title,
             description: item.description || '',
-            speaker:     item.speaker     || '',
-            order:       i,
+            speaker: item.speaker || '',
+            order: i,
           }))
         },
       },
@@ -166,7 +172,7 @@ export async function toggleEventPublish(id: string) {
 
   await prisma.event.update({
     where: { id },
-    data:  { isPublished: !event.isPublished },
+    data: { isPublished: !event.isPublished },
   })
 
   revalidatePath('/events')

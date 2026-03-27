@@ -14,17 +14,17 @@ async function getPosts(params?: {
   page?: number
 }): Promise<{ posts: PostSummary[]; total: number; pages: number; page: number }> {
   const search = params?.search ?? ''
-  const tag    = params?.tag    ?? ''
-  const page   = Math.max(1, params?.page ?? 1)
-  const limit  = 6
-  const skip   = (page - 1) * limit
+  const tag = params?.tag ?? ''
+  const page = Math.max(1, params?.page ?? 1)
+  const limit = 6
+  const skip = (page - 1) * limit
 
   const where = {
     isPublished: true,
     ...(tag && { tags: { some: { tag: { equals: tag, mode: 'insensitive' as const } } } }),
     ...(search && {
       OR: [
-        { title:   { contains: search, mode: 'insensitive' as const } },
+        { title: { contains: search, mode: 'insensitive' as const } },
         { content: { contains: search, mode: 'insensitive' as const } },
       ],
     }),
@@ -36,7 +36,7 @@ async function getPosts(params?: {
         where,
         include: {
           author: { select: { name: true, imageUrl: true } },
-          tags:   true,
+          tags: true,
         },
         orderBy: { createdAt: 'desc' },
         skip,
@@ -447,7 +447,7 @@ export default async function BlogPage({
             <Link
               href={`/blog?${new URLSearchParams({
                 ...(sp.search ? { search: sp.search } : {}),
-                ...(sp.tag    ? { tag:    sp.tag    } : {}),
+                ...(sp.tag ? { tag: sp.tag } : {}),
                 page: String(Math.max(1, currentPage - 1)),
               }).toString()}`}
               className={`page-btn${currentPage <= 1 ? ' disabled' : ''}`}
@@ -461,7 +461,7 @@ export default async function BlogPage({
                 key={p}
                 href={`/blog?${new URLSearchParams({
                   ...(sp.search ? { search: sp.search } : {}),
-                  ...(sp.tag    ? { tag:    sp.tag    } : {}),
+                  ...(sp.tag ? { tag: sp.tag } : {}),
                   page: String(p),
                 }).toString()}`}
                 className={`page-btn${p === currentPage ? ' active' : ''}`}
@@ -473,7 +473,7 @@ export default async function BlogPage({
             <Link
               href={`/blog?${new URLSearchParams({
                 ...(sp.search ? { search: sp.search } : {}),
-                ...(sp.tag    ? { tag:    sp.tag    } : {}),
+                ...(sp.tag ? { tag: sp.tag } : {}),
                 page: String(Math.min(pages, currentPage + 1)),
               }).toString()}`}
               className={`page-btn${currentPage >= pages ? ' disabled' : ''}`}

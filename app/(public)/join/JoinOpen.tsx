@@ -8,7 +8,7 @@ export function JoinOpen({
   settings: Record<string, string>
 }) {
   const instagramUrl = settings.instagram_url ?? ''
-  const linkedinUrl  = settings.linkedin_url  ?? ''
+  const linkedinUrl = settings.linkedin_url ?? ''
 
   return (
     <div style={{ fontFamily: "var(--font-primary, 'Google Sans', sans-serif)", background: '#fafafa', minHeight: '100vh' }}>

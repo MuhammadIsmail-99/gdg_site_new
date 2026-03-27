@@ -211,7 +211,12 @@ export default async function TeamPage() {
           display: flex;
           flex-direction: column;
           align-items: center; 
-          transition: transform 0.3s;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .leadership-card:hover {
+          box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+          border-color: #f1f3f4;
         }
 
         .leadership-card { cursor: pointer; }
@@ -315,6 +320,30 @@ export default async function TeamPage() {
           .team-grid { grid-template-columns: 1fr; }
           .core-container { padding: 2rem 1rem; }
         }
+
+        .cta-section { width: 100%; padding: 5rem 0; background: white; margin-top: 2rem; border-top: 1px solid var(--border-light); overflow: hidden; }
+        .brace-container { display: flex; align-items: center; justify-content: center; max-width: 1100px; margin: 0 auto; width: 100%; padding: 0 2rem; }
+        .brace-wrapper { flex-shrink: 0; }
+        .brace-svg { height: 100px; width: auto; opacity: 0.8; }
+        .cta-content { flex-grow: 1; text-align: center; padding: 0 0.5rem; }
+        .cta-title { font-size: 1.5rem; font-weight: 500; color: #202124; margin-bottom: 0.75rem; letter-spacing: -0.02em; line-height: 1.1; font-family: 'Product Sans', sans-serif; }
+        .cta-desc { font-size: 0.9rem; color: #5f6368; line-height: 1.4; margin-bottom: 1.25rem; }
+        .cta-hashtag { font-weight: 700; color: #202124; }
+        .cta-yellow-link { display: inline-flex; align-items: center; color: #FBBC04; font-weight: 700; font-size: 0.95rem; text-decoration: none; transition: opacity 0.2s; border-bottom: 2px solid transparent; padding-bottom: 2px; }
+        .cta-yellow-link:hover { opacity: 0.8; border-bottom-color: #FBBC04; }
+        .cta-yellow-link::after { content: '→'; margin-left: 6px; font-size: 1rem; transition: transform 0.2s; }
+        .cta-yellow-link:hover::after { transform: translateX(4px); }
+
+        @media (min-width: 768px) {
+            .brace-svg { height: 160px; }
+            .cta-content { padding: 0 1.5rem; }
+            .cta-title { font-size: 2.2rem; }
+            .cta-desc { font-size: 1rem; }
+            .hide-mobile { display: block; }
+        }
+
+        .animate-fade-in { animation: fadeIn 0.6s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
       `}</style>
 
       <header className="hero">
@@ -334,11 +363,11 @@ export default async function TeamPage() {
       <main className="main-content">
         <section style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
           <span className="section-label">Leadership</span>
-          <LeadershipCard name="Dr. Kashif Ayyub" role="Faculty Advisor" imageUrl="/images/team/kashif_ayub.png" slug="kashif-ayyub" />
+          <LeadershipCard name="Dr. Kashif Ayyub" role="Faculty Advisor" imageUrl="/images/team/kashif_ayub.png" slug="kashif-ayub" />
 
           <div className="vertical-line"></div>
 
-          <LeadershipCard name="Ubaid Ghazi" role="Campus Lead" imageUrl="/images/team/ubaid.png" slug="ubaid-ghazi" size="110px" />
+          <LeadershipCard name="Ubaid Ghazi" role="Campus Lead" imageUrl="/images/team/ubaid.png" slug="ubaid" size="110px" />
         </section>
 
         <div className="vertical-line" style={{ height: '80px' }}></div>
@@ -351,7 +380,7 @@ export default async function TeamPage() {
             <TeamCard name="M. Tashfeen" role="Operation Manager" imageUrl="/images/team/m_tashfeen.png" slug="m-tashfeen" />
             <TeamCard name="Alisha Fatima" role="Women in Tech Lead" imageUrl="/images/team/Alisha_fatima.png" slug="alisha-fatima" />
             <TeamCard name="Saad Ali" role="Community Manager" imageUrl="/images/team/saad_ali.png" slug="saad-ali" />
-            <TeamCard name="Adeel Asghar" role="Tech Lead" imageUrl="/images/team/adeel_asghar.png" slug="adeel-asghar" />
+            <TeamCard name="Adeel Asghar" role="Tech Lead" imageUrl="/images/team/adeel_asghar.png" slug="adeel" />
           </div>
         </div>
 
@@ -361,15 +390,50 @@ export default async function TeamPage() {
           <span className="section-label">Domain Leads</span>
           <p style={{ fontSize: '14px', color: '#5f6368', marginBottom: '2rem' }}>Specialists leading each technology vertical</p>
           <div className="team-grid">
-            <TeamCard name="Muhammad Ismail" role="Web & App Lead" imageUrl="/images/team/m_ismail.jpeg" slug="muhammad-ismail" />
+            <TeamCard name="Muhammad Ismail" role="Web & App Lead" imageUrl="/images/team/m_ismail.jpeg" slug="ismail" />
             <TeamCard name="Manahil Mirza" role="Data Science Lead" imageUrl="/images/team/manahil_mirza.png" slug="manahil-mirza" />
             <TeamCard name="Maleeha Zulfiqar" role="Gen AI Lead" imageUrl="/images/team/maleeha_zulfiqr.png" slug="maleeha-zulfiqr" />
             <TeamCard name="Ayesha Akhtar" role="Events Lead" imageUrl="/images/team/ayesha_akhtar.png" slug="ayesha-akhtar" />
-            <TeamCard name="Muhammad Yousaf" role="Graphics Lead" imageUrl="/images/team/m_yousasf.png" slug="muhammad-yousaf" />
+            <TeamCard name="Muhammad Yousaf" role="Graphics Lead" imageUrl="/images/team/m_yousasf.png" slug="m-yousaf" />
             <TeamCard name="Fatima Qureshi" role="Social Media Lead" imageUrl="/images/team/fatima_qureshi.png" slug="fatima-qureshi" />
           </div>
         </section>
       </main>
+
+      <section className="cta-section animate-fade-in">
+        <div className="brace-container">
+          {/* Left Brace */}
+          <div className="brace-wrapper">
+            <svg className="brace-svg" viewBox="0 0 60 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M50 10C50 10 25 10 25 35V85C25 95 10 100 10 100C10 100 25 105 25 115V165C25 190 50 190 50 190"
+                stroke="#202124" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+
+          {/* Content */}
+          <div className="cta-content">
+            <h2 className="cta-title">
+              Join our GDG on <br className="hide-mobile" /> Campus Chapter
+            </h2>
+
+            <p className="cta-desc">
+              Connect with fellow student developers, <br />
+              build projects, and grow your skills with <br />
+              <span className="cta-hashtag">#GDGoC Team</span>.
+            </p>
+
+            <Link href="/join" className="cta-yellow-link">Register Now</Link>
+          </div>
+
+          {/* Right Brace */}
+          <div className="brace-wrapper">
+            <svg className="brace-svg" viewBox="0 0 60 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M10 10C10 10 35 10 35 35V85C35 95 50 100 50 100C50 100 35 105 35 115V165C35 190 10 190 10 190"
+                stroke="#202124" strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

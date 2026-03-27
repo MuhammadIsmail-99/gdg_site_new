@@ -30,9 +30,9 @@ console.log('🔄 Initializing Prisma Client...');
 
 const adapter = new PrismaPg(pool as any)
 
-export const prisma = globalPrisma.prisma ?? new PrismaClient({ 
-  adapter, 
-  log: ['query', 'error', 'warn'] 
+export const prisma = globalPrisma.prisma ?? new PrismaClient({
+  adapter,
+  log: ['query', 'error', 'warn']
 })
 
 if (process.env.NODE_ENV !== 'production') globalPrisma.prisma = prisma

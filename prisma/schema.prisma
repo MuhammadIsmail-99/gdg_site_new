@@ -52,22 +52,27 @@ model MemberContribution {
 }
 
 model Event {
-  id            String              @id @default(cuid())
-  title         String
-  slug          String              @unique
-  description   String
-  type          String
-  location      String
-  date          DateTime
-  badgeUrl      String?
-  isPublished   Boolean             @default(false)
-  createdAt     DateTime            @default(now())
-  updatedAt     DateTime            @updatedAt
-  imageUrl      String?
-  locationType  String              @default("In-person")
-  agendaItems   EventAgendaItem[]
-  registrations EventRegistration[]
-  tags          EventTag[]
+  id              String              @id @default(cuid())
+  title           String
+  slug            String              @unique
+  description     String
+  type            String
+  location        String
+  date            DateTime
+  badgeUrl        String?
+  isPublished     Boolean             @default(false)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  imageUrl        String?
+  locationType    String              @default("In-person")
+  endDate         DateTime?
+  registrationUrl String?
+  instagramUrl    String?
+  linkedinUrl     String?
+  agendaItems     EventAgendaItem[]
+  EventHost       EventHost[]
+  registrations   EventRegistration[]
+  tags            EventTag[]
 }
 
 model EventTag {
@@ -227,6 +232,31 @@ model RecruitmentApplication {
   statement  String?
   status     String   @default("pending")
   createdAt  DateTime @default(now())
+}
+
+model EventHost {
+  id      String @id
+  eventId String
+  hostId  String
+  Event   Event  @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  Host    Host   @relation(fields: [hostId], references: [id], onDelete: Cascade)
+
+  @@unique([eventId, hostId])
+}
+
+model Host {
+  id           String      @id
+  name         String
+  organization String?
+  role         String?
+  imageUrl     String?
+  linkedin     String?
+  twitter      String?
+  github       String?
+  bio          String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime
+  EventHost    EventHost[]
 }
 
 enum Role {

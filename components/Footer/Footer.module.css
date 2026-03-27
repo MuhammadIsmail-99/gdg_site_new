@@ -54,9 +54,20 @@
     border-radius: 2px;
 }
 
-.boxRed { background-color: #EA4335; transform: rotate(45deg); }
-.boxBlue { background-color: #4285F4; transform: rotate(-12deg); }
-.boxYellow { background-color: #FBBC05; transform: rotate(12deg); }
+.boxRed {
+    background-color: #EA4335;
+    transform: rotate(45deg);
+}
+
+.boxBlue {
+    background-color: #4285F4;
+    transform: rotate(-12deg);
+}
+
+.boxYellow {
+    background-color: #FBBC05;
+    transform: rotate(12deg);
+}
 
 .footerLinks {
     display: grid;

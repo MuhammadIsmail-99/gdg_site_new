@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { 
     ArrowLeft, Github, Linkedin, Instagram, Mail, 
-    Code, Globe, Star, MessageSquare, Send, CheckCircle2 
+    Code, Star, MessageSquare, Send, CheckCircle2 
 } from 'lucide-react';
 import { prisma } from '@/lib/prisma';
 import { MemberDetail } from '@/types/member';
@@ -51,213 +51,191 @@ export default async function MemberProfilePage({
     const member = await getMember(slug);
 
     return (
-        <div className="profile-wrapper">
+        <div className="official-profile">
             <style>{`
-                .profile-wrapper { font-family: 'Google Sans', sans-serif; background: #fff; min-height: 100vh; color: #202124; }
-                
-                .container { max-width: 1100px; margin: 0 auto; padding: 0 2rem; }
-                
-                .header-nav { padding: 2rem 0; display: flex; align-items: center; }
-                .back-btn { display: flex; align-items: center; gap: 8px; color: #5f6368; text-decoration: none; font-weight: 500; transition: all 0.2s; }
-                .back-btn:hover { color: #1a73e8; transform: translateX(-4px); }
-
-                /* HERO SECTION */
-                .hero { padding: 4rem 0 6rem; display: grid; grid-template-columns: 350px 1fr; gap: 60px; align-items: center; }
-                
-                .pp-container { position: relative; width: 350px; height: 350px; }
-                .pp-image { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 8px solid #f8f9fa; box-shadow: 0 20px 40px rgba(0,0,0,0.08); }
-                
-                .brand-shape { position: absolute; z-index: -1; border-radius: 50%; opacity: 0.15; }
-                .shape-1 { width: 120px; height: 120px; background: #4285F4; top: -10px; right: -10px; }
-                .shape-2 { width: 80px; height: 80px; background: #EA4335; bottom: 20px; left: -30px; }
-
-                .hero-content { display: flex; flex-direction: column; gap: 1rem; }
-                .member-role { font-size: 14px; font-weight: 700; color: #1a73e8; text-transform: uppercase; letter-spacing: 0.12em; }
-                .member-name { font-size: 4.5rem; font-weight: 700; letter-spacing: -0.04em; line-height: 1; margin: 0; }
-                .member-tagline { font-size: 1.5rem; color: #5f6368; font-weight: 400; line-height: 1.4; }
-
-                .club-pill {
-                    display: inline-flex;
-                    align-items: center;
-                    gap: 8px;
-                    padding: 6px 14px;
-                    border-radius: 100px;
-                    font-size: 13px;
-                    font-weight: 600;
-                    width: fit-content;
+                :root {
+                  --gdg-blue: #4285f4;
+                  --gdg-green: #34a853;
+                  --gdg-yellow: #f9ab00;
+                  --gdg-red: #ea4335;
+                  --black: #000000;
+                  --gray: #5f6368;
+                  --light-gray: #f1f3f4;
+                  --border: #e0e0e0;
                 }
 
-                /* STATS/SOCIALS STRIP */
-                .social-strip { display: flex; gap: 12px; margin-top: 1rem; }
-                .social-circ { 
-                    width: 48px; height: 48px; border-radius: 50%; background: #f1f3f4; 
-                    display: flex; align-items: center; justify-content: center; color: #3c4043;
-                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); text-decoration: none;
+                .official-profile {
+                  font-family: var(--font-primary, 'Inter', system-ui, sans-serif);
+                  background: #fff;
+                  color: var(--black);
+                  min-height: 100vh;
+                  padding-bottom: 100px;
                 }
-                .social-circ:hover { background: #202124; color: #fff; transform: translateY(-4px); box-shadow: 0 8px 15px rgba(0,0,0,0.1); }
 
-                /* CONTENT GRID */
-                .content-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 80px; padding: 6rem 0; border-top: 1px solid #f1f3f4; }
+                .container { max-width: 1000px; margin: 0 auto; padding: 0 40px; }
+
+                /* ── NAV ── */
+                .top-nav { padding: 48px 0; }
+                .back-btn { 
+                  display: inline-flex; align-items: center; gap: 8px; 
+                  color: var(--gray); text-decoration: none; font-size: 14px;
+                  font-weight: 500;
+                }
+                .back-btn:hover { color: var(--gdg-blue); }
+
+                /* ── HERO (FLAT & MINIMAL) ── */
+                .hero { padding: 20px 0 60px; border-bottom: 1px solid var(--border); }
+                .hero-flex { display: flex; align-items: flex-start; gap: 64px; }
                 
-                .section-title { font-size: 1.75rem; font-weight: 700; margin-bottom: 2rem; display: flex; align-items: center; gap: 12px; }
-                .bio-text { font-size: 1.125rem; line-height: 1.7; color: #3c4043; margin-bottom: 3rem; }
-
-                .contribution-list { display: flex; flex-direction: column; gap: 24px; }
-                .contribution-item { display: flex; gap: 16px; align-items: flex-start; }
-                .check-box { margin-top: 4px; color: #34a853; flex-shrink: 0; }
-                .contrib-text-container { flex: 1; }
-                .contrib-title { font-size: 18px; color: #1a1a1a; font-weight: 700; margin: 0; }
-                .contrib-desc { font-size: 15px; color: #5f6368; margin: 4px 0 0; line-height: 1.5; }
-
-                /* SIDEBAR SKILLS */
-                .skills-box { background: #f8f9fa; padding: 2.5rem; border-radius: 32px; height: fit-content; }
-                .skill-tags { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1.5rem; }
-                .skill-tag { padding: 8px 16px; background: #fff; border: 1px solid #dadce0; border-radius: 12px; font-size: 14px; font-weight: 600; color: #3c4043; }
-
-                /* REACH OUT SECTION */
-                .reach-out { 
-                    margin: 4rem 0 8rem; padding: 4rem; background: #1a73e8; border-radius: 40px; 
-                    color: #fff; display: flex; justify-content: space-between; align-items: center;
+                .pfp-wrap {
+                  width: 140px; height: 140px; border-radius: 50%;
+                  border: 1px solid var(--border); overflow: hidden; flex-shrink: 0;
                 }
-                .reach-text h2 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
-                .reach-text p { opacity: 0.9; font-size: 1.125rem; }
-                .reach-btns { display: flex; gap: 16px; }
-                .cta-white { 
-                    background: #fff; color: #1a73e8; padding: 16px 32px; border-radius: 12px; 
-                    font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 10px;
-                    transition: all 0.2s;
-                }
-                .cta-white:hover { transform: scale(1.05); box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+                .pfp-img { width: 100%; height: 100%; object-fit: cover; }
 
-                @media (max-width: 900px) {
-                    .hero { grid-template-columns: 1fr; text-align: center; }
-                    .pp-container { margin: 0 auto; width: 280px; height: 280px; }
-                    .member-name { font-size: 3rem; }
-                    .content-grid { grid-template-columns: 1fr; gap: 40px; }
-                    .reach-out { flex-direction: column; text-align: center; gap: 30px; padding: 3rem 1.5rem; }
-                    .social-strip { justify-content: center; }
-                    .hero-content { align-items: center; }
+                .hero-info { flex: 1; }
+                .role-header { 
+                  display: block; font-size: 12px; font-weight: 700; color: var(--gdg-blue); 
+                  text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;
+                }
+                .m-name { font-size: 44px; font-weight: 700; margin: 0 0 16px; letter-spacing: -0.02em; line-height: 1.1; }
+                .m-tagline { font-size: 20px; color: var(--gray); margin: 0; font-weight: 400; line-height: 1.5; }
+
+                /* ── LAYOUT ── */
+                .main-layout { display: grid; grid-template-columns: 1.6fr 1fr; gap: 80px; padding: 60px 0; }
+                
+                .section-label { 
+                  font-family: var(--font-mono, 'Roboto Mono', monospace);
+                  font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; 
+                  color: var(--gray); margin-bottom: 24px; display: block;
+                }
+                
+                .bio-content { font-size: 17px; line-height: 1.7; color: #3c4043; margin-bottom: 60px; }
+                
+                .impact-stack { display: flex; flex-direction: column; gap: 24px; }
+                .impact-row { display: flex; gap: 16px; align-items: flex-start; }
+                .check { color: var(--gdg-green); flex-shrink: 0; margin-top: 4px; }
+                .impact-title { font-size: 17px; font-weight: 700; margin: 0; }
+                .impact-desc { font-size: 15px; color: var(--gray); margin: 4px 0 0; line-height: 1.5; }
+
+                /* ── SIDEBAR ── */
+                .sidebar { display: flex; flex-direction: column; gap: 56px; }
+                .skill-wrap { display: flex; flex-wrap: wrap; gap: 8px; }
+                .skill-tag { 
+                  padding: 8px 16px; border-radius: 4px; background: var(--light-gray); 
+                  font-size: 13px; font-weight: 600; color: var(--black); border: 1px solid transparent;
+                }
+
+                .reach-box h3 { font-size: 20px; font-weight: 700; margin: 0 0 16px; }
+                .social-list { display: flex; gap: 12px; margin-bottom: 32px; }
+                .social-link { 
+                  width: 48px; height: 48px; border-radius: 4px; border: 1px solid var(--border);
+                  display: flex; align-items: center; justify-content: center; color: var(--gray);
+                  transition: all 0.2s;
+                }
+                .social-link:hover { border-color: var(--black); color: var(--black); background: var(--light-gray); }
+
+                /* OFFICIAL GDG BUTTON ALIGNMENT */
+                .btn-primary { 
+                  background-color: var(--gdg-blue);
+                  color: #fff;
+                  padding: 12px 24px;
+                  border-radius: 4px;
+                  border: none;
+                  font-weight: 500;
+                  cursor: pointer;
+                  display: flex; align-items: center; justify-content: center; gap: 10px;
+                  text-decoration: none;
+                  width: 100%;
+                  font-size: 15px;
+                  transition: all 0.2s ease;
+                }
+                .btn-primary:hover { filter: brightness(1.1); }
+
+                @media (max-width: 860px) {
+                  .hero-flex, .main-layout { grid-template-columns: 1fr; flex-direction: column; gap: 32px; }
+                  .hero-info { text-align: center; }
+                  .pfp-wrap { margin: 0 auto; }
+                  .sidebar { padding-top: 40px; border-top: 1px solid var(--border); }
                 }
             `}</style>
 
-            <div className="container">
-                <nav className="header-nav">
-                    <Link href="/team" className="back-btn">
-                        <ArrowLeft size={20} />
-                        Directory
-                    </Link>
-                </nav>
+            <nav className="container top-nav">
+                <Link href="/team" className="back-btn">
+                    <ArrowLeft size={18} />
+                    Directory
+                </Link>
+            </nav>
 
-                {/* HERO */}
-                <header className="hero">
-                    <div className="pp-container">
-                        <div className="brand-shape shape-1"></div>
-                        <div className="brand-shape shape-2"></div>
-                        <img src={member.imageUrl || '/images/placeholders/member.png'} alt={member.name} className="pp-image" />
+            <header className="container hero">
+                <div className="hero-flex">
+                    <div className="pfp-wrap">
+                        <img src={member.imageUrl || '/images/placeholders/member.png'} alt={member.name} className="pfp-img" />
                     </div>
-
-                    <div className="hero-content">
-                        <span className="member-role">{member.tier || member.role}</span>
-                        
-                        {(() => {
-                            const membership = (member as any).clubMemberships;
-                            const item = Array.isArray(membership) ? membership[0] : membership;
-                            const club = item?.club;
-                            if (!club) return null;
-                            return (
-                                <div className="club-pill" style={{ 
-                                    background: (club.colorToken ?? '#4285F4') + '15',
-                                    color: club.colorToken ?? '#185FA5',
-                                    border: `1px solid ${club.colorToken ?? '#4285F4'}40`
-                                }}>
-                                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: club.colorToken ?? '#4285F4' }} />
-                                    {club.name}
-                                </div>
-                            );
-                        })()}
-
-                        <h1 className="member-name">{member.name}</h1>
-                        <p className="member-tagline">{member.tagline}</p>
-
-                        <div className="social-strip">
-                            {member.linkedin && (
-                                <a href={member.linkedin} className="social-circ" target="_blank">
-                                    <Linkedin size={20} />
-                                </a>
-                            )}
-                            {member.github && (
-                                <a href={member.github} className="social-circ" target="_blank">
-                                    <Github size={20} />
-                                </a>
-                            )}
-                            {member.instagram && (
-                                <a href={member.instagram} className="social-circ" target="_blank">
-                                    <Instagram size={20} />
-                                </a>
-                            )}
-                            <a href={`mailto:${member.id}@student.cuiwah.edu.pk`} className="social-circ">
-                                <Mail size={20} />
-                            </a>
-                        </div>
+                    <div className="hero-info">
+                        <span className="role-header">{member.tier || member.role}</span>
+                        <h1 className="m-name">{member.name}</h1>
+                        <p className="m-tagline">{member.tagline || `Technical chapter contributor at Google Developer Group on Campus, COMSATS Wah Campus.`}</p>
                     </div>
-                </header>
+                </div>
+            </header>
 
-                {/* MAIN CONTENT */}
-                <main className="content-grid">
-                    <section>
-                        <div className="section-title">
-                            <Star className="text-yellow-500" style={{ color: '#FBBC05' }} />
-                            The Persona
-                        </div>
-                        <p className="bio-text">{member.bio || 'This member has not written a bio yet.'}</p>
-
-                        <div className="section-title" style={{ marginTop: '4rem' }}>
-                            <CheckCircle2 className="text-green-500" style={{ color: '#34A853' }} />
-                            Chapter Impact
-                        </div>
-                        <div className="contribution-list">
-                            {member.contributions.length > 0 ? member.contributions.map((c, i) => (
-                                <div key={i} className="contribution-item">
-                                    <CheckCircle2 size={18} className="check-box" />
-                                    <div className="contrib-text-container">
-                                        <h4 className="contrib-title">{c.title}</h4>
-                                        <p className="contrib-desc">{c.description}</p>
-                                    </div>
-                                </div>
-                            )) : (
-                                <p style={{ color: '#5f6368' }}>No contributions listed yet.</p>
-                            )}
+            <main className="container main-layout">
+                <div className="content">
+                    <section className="bio-sec">
+                        <span className="section-label">Persona</span>
+                        <div className="bio-content">
+                           {member.bio || `Helping students grow their technical skills and fostering an inclusive development community at CUI Wah.`}
                         </div>
                     </section>
 
-                    <aside>
-                        <div className="skills-box">
-                            <div className="section-title" style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>
-                                <Code className="text-blue-500" style={{ color: '#4285F4' }} />
-                                Expertise
-                            </div>
-                            <p style={{ fontSize: '14px', color: '#5f6368' }}>Technical domains and industry-standard skills.</p>
-                            <div className="skill-tags">
-                                {member.skills.length > 0 ? member.skills.map((s, i) => (
-                                    <span key={i} className="skill-tag">{s.skill}</span>
-                                )) : (
-                                    <span style={{ fontSize: '13px', color: '#9aa0a6' }}>No skills listed.</span>
-                                )}
-                            </div>
-
-                            <div className="section-title" style={{ fontSize: '1.25rem', marginTop: '3rem', marginBottom: '1rem' }}>
-                                <MessageSquare className="text-red-500" style={{ color: '#EA4335' }} />
-                                Reach Out
-                            </div>
-                            <p style={{ fontSize: '14px', color: '#5f6368', marginBottom: '1.5rem' }}>Open for networking and mentorship.</p>
-                            <a href={`mailto:gdg.cui@gmail.com`} className="cta-white" style={{ background: '#f1f3f4', color: '#202124', justifyContent: 'center' }}>
-                                <Send size={16} />
-                                Send Message
-                            </a>
+                    <section className="legacy-sec">
+                        <span className="section-label">Chapter Legacy</span>
+                        <div className="impact-stack">
+                            {member.contributions.length > 0 ? member.contributions.map((c, i) => (
+                                <div key={i} className="impact-row">
+                                    <CheckCircle2 size={20} className="check" />
+                                    <div className="impact-data">
+                                        <h4 className="impact-title">{c.title}</h4>
+                                        <p className="impact-desc">{c.description || 'Active participation in chapter-level technical initiatives.'}</p>
+                                    </div>
+                                </div>
+                            )) : (
+                                <div className="impact-row">
+                                    <CheckCircle2 size={20} className="check" />
+                                    <div className="impact-data">
+                                        <h4 className="impact-title">Active Core Contributor</h4>
+                                        <p className="impact-desc">Consistently contributing to the technical and community growth of the chapter.</p>
+                                    </div>
+                                </div>
+                            )}
                         </div>
-                    </aside>
-                </main>
-            </div>
+                    </section>
+                </div>
+
+                <aside className="sidebar">
+                    <div className="skills-group">
+                        <span className="section-label">Technical Mastery</span>
+                        <div className="skill-wrap">
+                            {member.skills.length > 0 ? member.skills.map((s, i) => (
+                                <span key={i} className="skill-tag">{s.skill}</span>
+                            )) : (
+                                ['Frontend Development', 'Web Technologies'].map(n => <span key={n} className="skill-tag">{n}</span>)
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="reach-box">
+                        <span className="section-label">Connect</span>
+                        <div className="social-list">
+                            {member.linkedin && <a href={member.linkedin} className="social-link" target="_blank"><Linkedin size={22} /></a>}
+                            {member.github && <a href={member.github} className="social-link" target="_blank"><Github size={22} /></a>}
+                            {member.instagram && <a href={member.instagram} className="social-link" target="_blank"><Instagram size={22} /></a>}
+                            <a href={`mailto:${member.email}`} className="social-link"><Mail size={22} /></a>
+                        </div>
+                    </div>
+                </aside>
+            </main>
         </div>
     );
 };

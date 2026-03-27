@@ -27,6 +27,7 @@ const Navbar = () => {
         
         <ul className={styles.navLinks}>
           <li><Link href="/" className={pathname === '/' ? styles.active : ''}>Home</Link></li>
+          <li><Link href="/about" className={pathname === '/about' ? styles.active : ''}>About</Link></li>
           <li><Link href="/events" className={pathname === '/events' ? styles.active : ''}>Events</Link></li>
           <li><Link href="/team" className={pathname === '/team' ? styles.active : ''}>Team</Link></li>
           <li><Link href="/clubs" className={pathname === '/clubs' ? styles.active : ''}>Clubs</Link></li>

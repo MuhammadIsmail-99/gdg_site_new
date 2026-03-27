@@ -5,11 +5,11 @@ export function JoinClosed({
   message,
   settings,
 }: {
-  message:  string
+  message: string
   settings: Record<string, string>
 }) {
   const instagramUrl = settings.instagram_url ?? 'https://instagram.com/gdgoc_cuiwah'
-  const linkedinUrl  = settings.linkedin_url  ?? 'https://linkedin.com/company/gdgoc-cui-wah'
+  const linkedinUrl = settings.linkedin_url ?? 'https://linkedin.com/company/gdgoc-cui-wah'
 
   return (
     <div className="join-root">

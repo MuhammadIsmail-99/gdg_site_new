@@ -26,6 +26,8 @@ export type EventSummary = {
   badgeUrl:    string | null
   imageUrl:    string | null
   isPublished: boolean
+  instagramUrl: string | null
+  linkedinUrl:  string | null
   tags:        EventTag[]
   _count:      { registrations: number }
 }

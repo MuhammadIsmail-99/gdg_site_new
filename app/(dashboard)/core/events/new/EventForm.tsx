@@ -19,14 +19,14 @@ type EventFormProps = {
 
 export default function EventForm({ event, mode = 'create' }: EventFormProps) {
   const router = useRouter()
-  
+
   // State for dynamic fields
   const [tags, setTags] = useState<string>(event?.tags?.map((t: any) => t.tag).join(', ') || '')
   const [agenda, setAgenda] = useState<AgendaItem[]>(event?.agendaItems || [])
   const [isPublished, setIsPublished] = useState<boolean>(event?.isPublished || false)
 
-  const boundAction = mode === 'edit' 
-    ? updateEvent.bind(null, event.id) 
+  const boundAction = mode === 'edit'
+    ? updateEvent.bind(null, event.id)
     : createEvent
 
   const [state, action, isPending] = useActionState(boundAction, undefined)
@@ -48,7 +48,7 @@ export default function EventForm({ event, mode = 'create' }: EventFormProps) {
   return (
     <div style={{ maxWidth: 800, margin: '0 auto' }}>
       <form action={action} style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-        
+
         {/* Form Header */}
         <div style={{ background: '#fff', padding: '2rem', borderRadius: 16, border: '1px solid #dadce0' }}>
           <h2 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -60,10 +60,10 @@ export default function EventForm({ event, mode = 'create' }: EventFormProps) {
             {/* Title */}
             <div>
               <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: 6, color: '#5f6368' }}>TITLE *</label>
-              <input 
-                name="title" 
+              <input
+                name="title"
                 defaultValue={event?.title}
-                required 
+                required
                 placeholder="Event Title"
                 style={{ width: '100%', padding: '12px', borderRadius: 8, border: '1px solid #dadce0', outline: 'none' }}
               />
@@ -72,10 +72,10 @@ export default function EventForm({ event, mode = 'create' }: EventFormProps) {
             {/* Description */}
             <div>
               <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: 6, color: '#5f6368' }}>DESCRIPTION *</label>
-              <textarea 
-                name="description" 
+              <textarea
+                name="description"
                 defaultValue={event?.description}
-                required 
+                required
                 rows={5}
                 placeholder="Event details..."
                 style={{ width: '100%', padding: '12px', borderRadius: 8, border: '1px solid #dadce0', outline: 'none', resize: 'vertical' }}
@@ -86,8 +86,8 @@ export default function EventForm({ event, mode = 'create' }: EventFormProps) {
               {/* Type */}
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: 6, color: '#5f6368' }}>TYPE *</label>
-                <select 
-                  name="type" 
+                <select
+                  name="type"
                   defaultValue={event?.type || 'WORKSHOP'}
                   required
                   style={{ width: '100%', padding: '12px', borderRadius: 8, border: '1px solid #dadce0', outline: 'none', background: '#fff' }}
@@ -103,10 +103,10 @@ export default function EventForm({ event, mode = 'create' }: EventFormProps) {
               {/* Location */}
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: 6, color: '#5f6368' }}>LOCATION *</label>
-                <input 
-                  name="location" 
+                <input
+                  name="location"
                   defaultValue={event?.location}
-                  required 
+                  required
                   placeholder="e.g. Video Conf. Hall"
                   style={{ width: '100%', padding: '12px', borderRadius: 8, border: '1px solid #dadce0', outline: 'none' }}
                 />
@@ -117,11 +117,11 @@ export default function EventForm({ event, mode = 'create' }: EventFormProps) {
               {/* Date */}
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: 6, color: '#5f6368' }}>DATE & TIME *</label>
-                <input 
+                <input
                   type="datetime-local"
-                  name="date" 
+                  name="date"
                   defaultValue={event?.date ? new Date(event.date).toISOString().slice(0, 16) : ''}
-                  required 
+                  required
                   style={{ width: '100%', padding: '12px', borderRadius: 8, border: '1px solid #dadce0', outline: 'none' }}
                 />
               </div>
@@ -131,11 +131,35 @@ export default function EventForm({ event, mode = 'create' }: EventFormProps) {
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              {/* Instagram URL */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: 6, color: '#5f6368' }}>INSTAGRAM POST URL</label>
+                <input
+                  name="instagramUrl"
+                  defaultValue={event?.instagramUrl}
+                  placeholder="https://www.instagram.com/p/..."
+                  style={{ width: '100%', padding: '12px', borderRadius: 8, border: '1px solid #dadce0', outline: 'none' }}
+                />
+              </div>
+
+              {/* LinkedIn URL */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: 6, color: '#5f6368' }}>LINKEDIN POST URL</label>
+                <input
+                  name="linkedinUrl"
+                  defaultValue={event?.linkedinUrl}
+                  placeholder="https://www.linkedin.com/posts/..."
+                  style={{ width: '100%', padding: '12px', borderRadius: 8, border: '1px solid #dadce0', outline: 'none' }}
+                />
+              </div>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
               {/* Image URL */}
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: 6, color: '#5f6368' }}>IMAGE URL</label>
-                <input 
-                  name="imageUrl" 
+                <input
+                  name="imageUrl"
                   defaultValue={event?.imageUrl}
                   placeholder="https://images.unsplash.com/..."
                   style={{ width: '100%', padding: '12px', borderRadius: 8, border: '1px solid #dadce0', outline: 'none' }}
@@ -145,8 +169,8 @@ export default function EventForm({ event, mode = 'create' }: EventFormProps) {
               {/* Badge URL */}
               <div>
                 <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: 6, color: '#5f6368' }}>BADGE URL</label>
-                <input 
-                  name="badgeUrl" 
+                <input
+                  name="badgeUrl"
                   defaultValue={event?.badgeUrl}
                   placeholder="https://..."
                   style={{ width: '100%', padding: '12px', borderRadius: 8, border: '1px solid #dadce0', outline: 'none' }}
@@ -157,8 +181,8 @@ export default function EventForm({ event, mode = 'create' }: EventFormProps) {
             {/* Tags */}
             <div>
               <label style={{ display: 'block', fontSize: '0.85rem', fontWeight: 700, marginBottom: 6, color: '#5f6368' }}>TAGS (comma-separated)</label>
-              <input 
-                name="tags" 
+              <input
+                name="tags"
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
                 placeholder="AI, Web, Google Cloud..."
@@ -175,11 +199,11 @@ export default function EventForm({ event, mode = 'create' }: EventFormProps) {
 
             {/* Publish Toggle */}
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginTop: 10 }}>
-              <input 
-                type="checkbox" 
-                id="isPublished" 
-                name="isPublished" 
-                value="true" 
+              <input
+                type="checkbox"
+                id="isPublished"
+                name="isPublished"
+                value="true"
                 checked={isPublished}
                 onChange={(e) => setIsPublished(e.target.checked)}
                 style={{ width: 18, height: 18, cursor: 'pointer' }}
@@ -197,8 +221,8 @@ export default function EventForm({ event, mode = 'create' }: EventFormProps) {
             <h2 style={{ fontSize: '1.25rem', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 10 }}>
               <Calendar size={20} color="#34A853" /> Event Agenda
             </h2>
-            <button 
-              type="button" 
+            <button
+              type="button"
               onClick={addAgendaItem}
               style={{ background: '#f8f9fa', border: '1px solid #dadce0', borderRadius: 8, padding: '6px 14px', fontSize: '0.85rem', fontWeight: 600, cursor: 'pointer' }}
             >
@@ -209,37 +233,37 @@ export default function EventForm({ event, mode = 'create' }: EventFormProps) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {agenda.map((item, idx) => (
               <div key={idx} style={{ border: '1px solid #f1f3f4', padding: '1.25rem', borderRadius: 12, position: 'relative', background: '#fafafa' }}>
-                <button 
-                  type="button" 
+                <button
+                  type="button"
                   onClick={() => removeAgendaItem(idx)}
                   style={{ position: 'absolute', top: 12, right: 12, color: '#EA4335', background: 'none', border: 'none', cursor: 'pointer' }}
                 >
                   <Trash2 size={18} />
                 </button>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '1rem', marginBottom: '1rem' }}>
-                  <input 
-                    placeholder="Time (e.g. 10:00 AM)" 
-                    value={item.time} 
+                  <input
+                    placeholder="Time (e.g. 10:00 AM)"
+                    value={item.time}
                     onChange={(e) => updateAgendaItem(idx, 'time', e.target.value)}
                     style={{ padding: '8px', borderRadius: 6, border: '1px solid #dadce0' }}
                   />
-                  <input 
-                    placeholder="Topic Title" 
-                    value={item.title} 
+                  <input
+                    placeholder="Topic Title"
+                    value={item.title}
                     onChange={(e) => updateAgendaItem(idx, 'title', e.target.value)}
                     style={{ padding: '8px', borderRadius: 6, border: '1px solid #dadce0' }}
                   />
                 </div>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                  <input 
-                    placeholder="Speaker (optional)" 
-                    value={item.speaker} 
+                  <input
+                    placeholder="Speaker (optional)"
+                    value={item.speaker}
                     onChange={(e) => updateAgendaItem(idx, 'speaker', e.target.value)}
                     style={{ padding: '8px', borderRadius: 6, border: '1px solid #dadce0' }}
                   />
-                  <input 
-                    placeholder="Description (optional)" 
-                    value={item.description} 
+                  <input
+                    placeholder="Description (optional)"
+                    value={item.description}
                     onChange={(e) => updateAgendaItem(idx, 'description', e.target.value)}
                     style={{ padding: '8px', borderRadius: 6, border: '1px solid #dadce0' }}
                   />
@@ -264,18 +288,18 @@ export default function EventForm({ event, mode = 'create' }: EventFormProps) {
 
         {/* Submit Actions */}
         <div style={{ display: 'flex', gap: 12, marginBottom: '4rem' }}>
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={isPending}
-            style={{ 
+            style={{
               background: '#4285F4', color: '#fff', padding: '12px 32px', borderRadius: 12, border: 'none', fontSize: '1rem', fontWeight: 700, cursor: isPending ? 'wait' : 'pointer', flex: 1,
               boxShadow: '0 4px 12px rgba(66, 133, 244, 0.4)', opacity: isPending ? 0.7 : 1
             }}
           >
             {isPending ? 'Saving...' : mode === 'edit' ? 'Update Event' : 'Create Event'}
           </button>
-          <button 
-            type="button" 
+          <button
+            type="button"
             onClick={() => router.push('/core/events')}
             style={{ background: '#fff', color: '#5f6368', padding: '12px 24px', borderRadius: 12, border: '1px solid #dadce0', fontSize: '1rem', fontWeight: 600, cursor: 'pointer' }}
           >
